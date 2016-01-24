@@ -24,7 +24,16 @@
  struct entry keywords[] = {
    "begin", BEGIN,
    "end", END,
-   "div", DIV,
+   "done", DONE,
+   "if", IF,
+   "while", WHILE,
+   "do", DO,
+   "for", FOR,
+   "int", INT,
+   "float", FLOAT,
+   "char", CHAR,
+   "string", STRING,
+
    "mod", MOD,
    0, 0
  };
@@ -51,5 +60,5 @@
    int len;
    len = strlen(s);
    if(lastentry + 1 >= SYMMAX)
-    
+
  }
