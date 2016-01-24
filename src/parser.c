@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include "parser.h"
 #include "lexer.h"
+#include "global.h"
+#include "error.h"
+#include "symbol.h"
 
 int parser(char * fileName)
 {

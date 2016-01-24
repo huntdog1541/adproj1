@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lexer.h"
+#include "global.h"
+#include "error.h"
+#include "parser.h"
+#include "symbol.h"
 
 int lex(char * fileName)
 {

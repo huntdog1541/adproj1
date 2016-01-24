@@ -10,6 +10,8 @@
 #include "symbol.h"
 #include "parser.h"
 #include "lexer.h"
+#include "global.h"
+#include "error.h"
 
 int main(int argc, char ** argv)
 {
@@ -20,4 +22,3 @@ int main(int argc, char ** argv)
 
 	return 0;
 }
-
