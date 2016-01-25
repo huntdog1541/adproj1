@@ -55,4 +55,3 @@
 #define ID 505
 
 #endif /* GLOBAL_H_ */
--
