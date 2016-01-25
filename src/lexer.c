@@ -22,7 +22,7 @@ int lex(char * fileName)
 	while(t != EOF)
 	{
 		printf("%c", t);
-		fgetc(fin);
+		t = fgetc(fin);
 	}
 	printf("\n");
 	fclose(fin);

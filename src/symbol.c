@@ -23,7 +23,7 @@ char lexemes[STRMAX];
 int lastchar = -1;
 int lastentry = 0;
 
- struct entry keywords[] = {
+struct entry keywords[] = {
    "begin", BEGIN,
    "end", END,
    "done", DONE,
