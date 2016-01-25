@@ -10,7 +10,21 @@
 
 int lex(char * fileName)
 {
-	puts("Lexical Analysis ran");
+
 	printf("File is %s \n", fileName);
+	FILE * fin = fopen("test.txt", "r");
+	if(!fin)
+	{
+		perror("File opening failed");
+		exit(1);
+	}
+	int t = fgetc(fin);
+	while(t != EOF)
+	{
+		printf("%c", t);
+		fgetc(fin);
+	}
+	printf("\n");
+	fclose(fin);
 	return 0;
 }
