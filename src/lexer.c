@@ -45,7 +45,7 @@ int lex(struct content * con)
 		}
 		else if(isalpha(t))
 		{
-			printf("found id\n");
+			printf("  found id\n");
 			int p, b = 0;
 			while(isalnum(t)){
 				lexbuf[b] = t;
@@ -71,7 +71,7 @@ int lex(struct content * con)
 			con->isDone = 1;
 		else {
 			tokenval = NONE;
-			printf("%c:%d\n", t, t);
+			printf("  %c:%d\n", t, t);
 		}
 
 		t = fgetc(fin);
@@ -79,4 +79,29 @@ int lex(struct content * con)
 	printf("\n");
 	fclose(fin);
 	return 0;
+}
+
+void getID(struct content * con, char t)
+{
+
+}
+
+char * getToken(char * buffer, char t)
+{
+	int temp = t, i = 0;
+	while(isValidID(t))
+	{
+
+	}
+	return buffer;
+}
+
+int isValidID(char t)
+{
+	int ans = 0;
+	if(isalnum(t))
+		ans = 1;
+	if(t == '_')
+		ans = 1;
+	return ans;
 }
