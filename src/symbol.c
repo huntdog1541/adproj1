@@ -4,17 +4,17 @@
  *  Created on: Jan 23, 2016
  *      Author: dhunt
  */
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include "global.h"
- #include "error.h"
- #include "lexer.h"
- #include "parser.h"
- #include "symbol.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "global.h"
+#include "error.h"
+#include "lexer.h"
+#include "parser.h"
+#include "symbol.h"
 
- #define STRMAX 999
- #define SYMMAX 999
+#define STRMAX 999
+#define SYMMAX 999
 
 struct entry symtable[SYMMAX];
 
@@ -22,12 +22,6 @@ char lexemes[STRMAX];
 
 int lastchar = -1;
 int lastentry = 0;
-
-
- struct entry {
-   char * lexptr;
-   int token;
- };
 
  struct entry keywords[] = {
    "begin", BEGIN,
@@ -45,7 +39,7 @@ int lastentry = 0;
    0, 0
  };
 
- init()
+ void init()
  {
    struct entry *p;
    for(p = keywords; p->token; p++)

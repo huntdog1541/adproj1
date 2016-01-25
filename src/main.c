@@ -7,11 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbol.h"
 #include "parser.h"
-#include "lexer.h"
+#include "symbol.h"
 #include "global.h"
-#include "error.h"
 
 int main(int argc, char ** argv)
 {

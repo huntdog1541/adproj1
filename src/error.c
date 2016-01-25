@@ -6,4 +6,10 @@
  */
  #include <stdio.h>
  #include <stdlib.h>
- #include <string.h>
+#include "error.h"
+
+ void error(char * m)
+ {
+   fprintf(stderr, "Error\n");
+   exit(1);
+ }
