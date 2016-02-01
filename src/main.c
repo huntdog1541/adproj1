@@ -7,17 +7,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "symbol.h"
 #include "parser.h"
-#include "lexer.h"
+#include "symbol.h"
 #include "global.h"
-#include "error.h"
 
 int main(int argc, char ** argv)
 {
 	puts("Hello World!");
 	char str[256];
 	strcpy(str, "test.txt");
+	char dir[256];
+	getcwd(dir, sizeof(dir));
+	printf("The directory is %s\n", dir);
 	parser(str);
 
 	return 0;

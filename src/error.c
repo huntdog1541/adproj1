@@ -6,4 +6,10 @@
  */
  #include <stdio.h>
  #include <stdlib.h>
- #include <string.h>
+#include "error.h"
+
+ void error(struct content * con)
+ {
+   fprintf(stderr, "Error at line %d position %d :%s \n", con->lineNumber, con->positionNumber, con->errorMessage);
+   exit(1);
+ }
