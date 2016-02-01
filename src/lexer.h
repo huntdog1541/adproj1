@@ -15,7 +15,7 @@
 
 int lex(struct content * con);
 
-void getID(struct content * con, char t);
+void getID(struct content * con);
 
 char * getToken(char * buffer, char t);
 

@@ -33,7 +33,7 @@ int lex(struct content * con)
 	}
 	while(con->isDone != 1)
 	{
-		printf("%c", t);
+		//printf("%c", t);
 		if((t == ' ') && (t == '/t'))
 		{
 			con->positionNumber++;//Avoid whitespace
@@ -45,27 +45,8 @@ int lex(struct content * con)
 		}
 		else if(isalpha(t))
 		{
-			printf("  found id\n");
-			int p, b = 0;
-			while(isalnum(t)){
-				lexbuf[b] = t;
-				t = fgetc(fin);
-				b++;
-				if(b >= BSIZE)
-				{
-					strcpy(con->errorMessage, "Exceeded buffer size");
-					error(con);
-				}
-			}
-			lexbuf[b] = EOS;
-			if(t == EOF)
-				ungetc(t, fin);
-			printf("got alpha[%s]\n", lexbuf);
-			p = lookup(lexbuf);
-			if(p == NOT_FOUND)
-				p = insert(lexbuf, ID);
-			tokenval = p;
-			printf("%d\n", getTokenType(p));
+			ungetc(t, fin);
+			getID(con);
 		}
 		else if(t == EOF)
 			con->isDone = 1;
@@ -81,9 +62,36 @@ int lex(struct content * con)
 	return 0;
 }
 
-void getID(struct content * con, char t)
+void getID(struct content * con)
 {
-
+		int i = 0, p = 0;
+		char temp = fgetc(fin);
+		char lexbuf[BSIZE];
+		while(isalnum(temp))
+		{
+			lexbuf[i] = temp;
+			i++;
+			temp = fgetc(fin);
+			if(temp == '_')
+				printf("Found underscore\n");
+			if(i >= BSIZE)
+			{
+				strcpy(con->errorMessage, "Exceeded buffer size");
+				error(con);
+			}
+		}
+		lexbuf[i] = EOS;
+		if(temp == EOF)
+		{
+			ungetc(temp, fin);
+			con->isDone == 1;
+		}
+		printf("got alpha[%s]\n", lexbuf);
+		p = lookup(lexbuf);
+		if(p == NOT_FOUND)
+			p = insert(lexbuf, ID);
+		tokenval = p;
+		printf("%d\n", getTokenType(p));
 }
 
 char * getToken(char * buffer, char t)
