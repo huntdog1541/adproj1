@@ -17,9 +17,16 @@
 #include "lexer.h"
 #include "parser.h"
 
+ init();
 
+ int lookup(char s[]);
 
+ int insert(char s[], int tok);
 
-void printSymbol()
+char * getLexeme(int pos);
+
+int getTokenType(int pos);
+
+void printSymbol();
 
 #endif /* SYMBOL_H_ */

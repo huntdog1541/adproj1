@@ -3,14 +3,14 @@ CFLAGS = -c -Wall
 
 TARGET = Parse
 
-$(TARGET): main.o parse.o lexer.o error.o symbol.o
-	$(CC) -o $(TARGET) main.o parse.o lexer.o error.o symbol.o
+$(TARGET): main.o parser.o lexer.o error.o symbol.o
+	$(CC) -o $(TARGET) main.o parser.o lexer.o error.o symbol.o
 
 main.o: main.c global.h
 	$(CC) $(CFLAGS) main.c global.h
 
-parse.o: parse.c parse.h
-	$(CC) $(CFLAGS) parse.c parse.h
+parser.o: parser.c parser.h
+	$(CC) $(CFLAGS) parser.c parser.h
 
 lexer.o: lexer.c lexer.h
 	$(CC) $(CFLAGS) lexer.c lexer.h
