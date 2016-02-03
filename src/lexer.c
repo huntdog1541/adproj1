@@ -104,12 +104,37 @@ char * getToken(char * buffer, char t)
 	return buffer;
 }
 
-int isValidID(char t)
+int getNextToken(struct content * con)
 {
-	int ans = 0;
-	if(isalnum(t))
-		ans = 1;
-	if(t == '_')
-		ans = 1;
-	return ans;
+	char temp;
+	int p, b = 0, ans = 0;
+	temp = fgetc(fin);
+	if((temp == ' ') || (temp == "\t"))
+	{
+		ungetc(temp, fin);
+		absorbSpace();
+		temp = fgetc(fin);
+	}
+  if(temp == '\n')
+	{
+		con->lineNumber++;
+		temp = fgetc(fin);
+	}
+	if(isalnum(temp))
+	{
+		ungetc(temp, fin);
+		ans = getID();
+	}
+
+}
+
+void absorbSpace()
+{
+	char temp = fgetc(fin);
+	while((temp == ' ') || (temp == "\t"))
+	{
+		con->positionNumber++;
+		temp = fgetc(fin);
+	}
+	ungetc(temp, fin);
 }

@@ -21,4 +21,8 @@ char * getToken(char * buffer, char t);
 
 int isValidID(char t);
 
+void absorbSpace();
+
+int getNextToken(struct content * con);
+
 #endif /* LEXER_H_ */
