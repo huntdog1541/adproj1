@@ -62,7 +62,7 @@ int lex(struct content * con)
 	return 0;
 }
 
-void getID(struct content * con)
+int = getID(struct content * con)
 {
 		int i = 0, p = 0;
 		char temp = fgetc(fin);
@@ -73,7 +73,18 @@ void getID(struct content * con)
 			i++;
 			temp = fgetc(fin);
 			if(temp == '_')
+			{
 				printf("Found underscore\n");
+				if(isalnum(lookahead()))
+				{
+					lexbuf[i++] = temp;
+					temp = fgetc(fin);
+				}
+				else
+				{
+					error();
+				}
+			}
 			if(i >= BSIZE)
 			{
 				strcpy(con->errorMessage, "Exceeded buffer size");
@@ -104,14 +115,18 @@ char * getToken(char * buffer, char t)
 	return buffer;
 }
 
-int getNextToken(struct content * con)
+void getNextToken(struct content * con)
 {
 	char temp;
 	int p, b = 0, ans = 0;
 	temp = fgetc(fin);
+	if(temp == EOF)
+	{
+		con->isDone = 1;
+		return;
+	}
 	if((temp == ' ') || (temp == "\t"))
 	{
-		ungetc(temp, fin);
 		absorbSpace();
 		temp = fgetc(fin);
 	}
@@ -123,9 +138,16 @@ int getNextToken(struct content * con)
 	if(isalnum(temp))
 	{
 		ungetc(temp, fin);
-		ans = getID();
+		getID();
+		return;
 	}
-
+	if(isdigit(temp))
+	{
+		ungetc(temp, fin);
+		getNumber();
+		return;
+	}
+	int ans = checkSpecialCharater(temp);
 }
 
 void absorbSpace()
@@ -137,4 +159,37 @@ void absorbSpace()
 		temp = fgetc(fin);
 	}
 	ungetc(temp, fin);
+}
+
+char lookahead(struct content * con)
+{
+	char t = fgetc(fin);
+	ungetc(t, fin);
+	return t;
+}
+
+void getNumber()
+{
+	char t = fgetc(fin);
+	char buffer[BSIZE];
+	int i = 0;
+	buffer[i++] = t;
+	while(isDigit(t))
+	{
+		buffer[i++] = t;
+		t = fgetc(fin);
+	}
+	ungetc(t, fin);
+}
+
+int checkSpecialCharacter(char temp)
+{
+	switch(temp)
+	{
+		case '=':
+		case '/':
+		case '+':
+		case '-':
+		case ''
+	}
 }
