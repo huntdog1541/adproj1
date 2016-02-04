@@ -25,4 +25,12 @@ void absorbSpace();
 
 int getNextToken(struct content * con);
 
+int checkSpecialChar(char temp);
+
+void getNumber();
+
+char lookahead(struct content * con);
+
+void absorbSpace(struct content * con);
+
 #endif /* LEXER_H_ */

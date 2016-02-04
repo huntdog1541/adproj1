@@ -62,7 +62,7 @@ int lex(struct content * con)
 	return 0;
 }
 
-int = getID(struct content * con)
+void getID(struct content * con)
 {
 		int i = 0, p = 0;
 		char temp = fgetc(fin);
@@ -75,14 +75,14 @@ int = getID(struct content * con)
 			if(temp == '_')
 			{
 				printf("Found underscore\n");
-				if(isalnum(lookahead()))
+				if(isalnum(lookahead(con)))
 				{
 					lexbuf[i++] = temp;
 					temp = fgetc(fin);
 				}
 				else
 				{
-					error();
+					//error();
 				}
 			}
 			if(i >= BSIZE)
@@ -95,7 +95,7 @@ int = getID(struct content * con)
 		if(temp == EOF)
 		{
 			ungetc(temp, fin);
-			con->isDone == 1;
+			con->isDone = 1;
 		}
 		printf("got alpha[%s]\n", lexbuf);
 		p = lookup(lexbuf);
@@ -105,6 +105,7 @@ int = getID(struct content * con)
 		printf("%d\n", getTokenType(p));
 }
 
+/*
 char * getToken(char * buffer, char t)
 {
 	int temp = t, i = 0;
@@ -113,9 +114,9 @@ char * getToken(char * buffer, char t)
 
 	}
 	return buffer;
-}
+}*/
 
-void getNextToken(struct content * con)
+int getNextToken(struct content * con)
 {
 	char temp;
 	int p, b = 0, ans = 0;
@@ -123,11 +124,11 @@ void getNextToken(struct content * con)
 	if(temp == EOF)
 	{
 		con->isDone = 1;
-		return;
+		return 0;
 	}
-	if((temp == ' ') || (temp == "\t"))
+	if((temp == ' ') || (temp == '\t'))
 	{
-		absorbSpace();
+		absorbSpace(con);
 		temp = fgetc(fin);
 	}
   if(temp == '\n')
@@ -138,22 +139,23 @@ void getNextToken(struct content * con)
 	if(isalnum(temp))
 	{
 		ungetc(temp, fin);
-		getID();
-		return;
+		getID(con);
+		return 0;
 	}
 	if(isdigit(temp))
 	{
 		ungetc(temp, fin);
 		getNumber();
-		return;
+		return 0;
 	}
-	int ans = checkSpecialCharater(temp);
+	int r = checkSpecialChar(temp);
+	return r;
 }
 
-void absorbSpace()
+void absorbSpace(struct content * con)
 {
 	char temp = fgetc(fin);
-	while((temp == ' ') || (temp == "\t"))
+	while((temp == ' ') || (temp == '/t'))
 	{
 		con->positionNumber++;
 		temp = fgetc(fin);
@@ -168,21 +170,25 @@ char lookahead(struct content * con)
 	return t;
 }
 
+
 void getNumber()
 {
 	char t = fgetc(fin);
 	char buffer[BSIZE];
 	int i = 0;
 	buffer[i++] = t;
+	/*
 	while(isDigit(t))
 	{
 		buffer[i++] = t;
 		t = fgetc(fin);
 	}
+	*/
 	ungetc(t, fin);
 }
 
-int checkSpecialCharacter(char temp)
+
+int checkSpecialChar(char temp)
 {
 	switch(temp)
 	{
@@ -190,6 +196,7 @@ int checkSpecialCharacter(char temp)
 		case '/':
 		case '+':
 		case '-':
-		case ''
+		default: break;
 	}
+	return 1;
 }
