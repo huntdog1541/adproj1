@@ -82,7 +82,7 @@ void getID(struct content * con)
 				}
 				else
 				{
-					//error();
+					fprintf(stderr, "Error\n");
 				}
 			}
 			if(i >= BSIZE)
@@ -98,10 +98,12 @@ void getID(struct content * con)
 			con->isDone = 1;
 		}
 		printf("got alpha[%s]\n", lexbuf);
+		printAllString(lexbuf);
 		p = lookup(lexbuf);
 		if(p == NOT_FOUND)
 			p = insert(lexbuf, ID);
 		tokenval = p;
+		printf("Token Value %d\n", tokenval);
 		printf("%d\n", getTokenType(p));
 }
 
@@ -199,4 +201,13 @@ int checkSpecialChar(char temp)
 		default: break;
 	}
 	return 1;
+}
+
+void printAllString(char * string)
+{
+	int i, size = strlen(string);
+	for(i = 0; i < size; i++)
+	{
+		printf("Char: %c :: Num: %d\n", string[i], string[i]);
+	}
 }

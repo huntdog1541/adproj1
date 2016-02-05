@@ -42,6 +42,7 @@ int lastentry = 0;
    "char", CHAR,
    "string", STRING,
    "%", MODUS,
+   "program", PROGRAM,
    0, 0
  };
 

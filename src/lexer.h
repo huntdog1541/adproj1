@@ -33,4 +33,6 @@ char lookahead(struct content * con);
 
 void absorbSpace(struct content * con);
 
+void printAllString(char * string);
+
 #endif /* LEXER_H_ */
