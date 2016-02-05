@@ -33,7 +33,7 @@ int lex(struct content * con)
 	}
 	while(con->isDone != 1)
 	{
-		printf("%c", t);
+		//printf("%c", t);
 		if((t == ' ') && (t == '/t'))
 		{
 			con->positionNumber++;//Avoid whitespace
@@ -45,27 +45,8 @@ int lex(struct content * con)
 		}
 		else if(isalpha(t))
 		{
-			printf("  found id\n");
-			int p, b = 0;
-			while(isalnum(t)){
-				lexbuf[b] = t;
-				t = fgetc(fin);
-				b++;
-				if(b >= BSIZE)
-				{
-					strcpy(con->errorMessage, "Exceeded buffer size");
-					error(con);
-				}
-			}
-			lexbuf[b] = EOS;
-			if(t == EOF)
-				ungetc(t, fin);
-			printf("got alpha[%s]\n", lexbuf);
-			p = lookup(lexbuf);
-			if(p == NOT_FOUND)
-				p = insert(lexbuf, ID);
-			tokenval = p;
-			printf("%d\n", getTokenType(p));
+			ungetc(t, fin);
+			getID(con);
 		}
 		else if(t == EOF)
 			con->isDone = 1;
@@ -81,11 +62,52 @@ int lex(struct content * con)
 	return 0;
 }
 
-void getID(struct content * con, char t)
+void getID(struct content * con)
 {
-
+		int i = 0, p = 0;
+		char temp = fgetc(fin);
+		char lexbuf[BSIZE];
+		while(isalnum(temp))
+		{
+			lexbuf[i] = temp;
+			i++;
+			temp = fgetc(fin);
+			if(temp == '_')
+			{
+				printf("Found underscore\n");
+				if(isalnum(lookahead(con)))
+				{
+					lexbuf[i++] = temp;
+					temp = fgetc(fin);
+				}
+				else
+				{
+					fprintf(stderr, "Error\n");
+				}
+			}
+			if(i >= BSIZE)
+			{
+				strcpy(con->errorMessage, "Exceeded buffer size");
+				error(con);
+			}
+		}
+		lexbuf[i] = EOS;
+		if(temp == EOF)
+		{
+			ungetc(temp, fin);
+			con->isDone = 1;
+		}
+		printf("got alpha[%s]\n", lexbuf);
+		printAllString(lexbuf);
+		p = lookup(lexbuf);
+		if(p == NOT_FOUND)
+			p = insert(lexbuf, ID);
+		tokenval = p;
+		printf("Token Value %d\n", tokenval);
+		printf("%d\n", getTokenType(p));
 }
 
+/*
 char * getToken(char * buffer, char t)
 {
 	int temp = t, i = 0;
@@ -94,14 +116,98 @@ char * getToken(char * buffer, char t)
 
 	}
 	return buffer;
+}*/
+
+int getNextToken(struct content * con)
+{
+	char temp;
+	int p, b = 0, ans = 0;
+	temp = fgetc(fin);
+	if(temp == EOF)
+	{
+		con->isDone = 1;
+		return 0;
+	}
+	if((temp == ' ') || (temp == '\t'))
+	{
+		absorbSpace(con);
+		temp = fgetc(fin);
+	}
+  if(temp == '\n')
+	{
+		con->lineNumber++;
+		temp = fgetc(fin);
+	}
+	if(isalnum(temp))
+	{
+		ungetc(temp, fin);
+		getID(con);
+		return 0;
+	}
+	if(isdigit(temp))
+	{
+		ungetc(temp, fin);
+		getNumber();
+		return 0;
+	}
+	int r = checkSpecialChar(temp);
+	return r;
 }
 
-int isValidID(char t)
+void absorbSpace(struct content * con)
 {
-	int ans = 0;
-	if(isalnum(t))
-		ans = 1;
-	if(t == '_')
-		ans = 1;
-	return ans;
+	char temp = fgetc(fin);
+	while((temp == ' ') || (temp == '/t'))
+	{
+		con->positionNumber++;
+		temp = fgetc(fin);
+	}
+	ungetc(temp, fin);
+}
+
+char lookahead(struct content * con)
+{
+	char t = fgetc(fin);
+	ungetc(t, fin);
+	return t;
+}
+
+
+void getNumber()
+{
+	char t = fgetc(fin);
+	char buffer[BSIZE];
+	int i = 0;
+	buffer[i++] = t;
+	/*
+	while(isDigit(t))
+	{
+		buffer[i++] = t;
+		t = fgetc(fin);
+	}
+	*/
+	ungetc(t, fin);
+}
+
+
+int checkSpecialChar(char temp)
+{
+	switch(temp)
+	{
+		case '=':
+		case '/':
+		case '+':
+		case '-':
+		default: break;
+	}
+	return 1;
+}
+
+void printAllString(char * string)
+{
+	int i, size = strlen(string);
+	for(i = 0; i < size; i++)
+	{
+		printf("Char: %c :: Num: %d\n", string[i], string[i]);
+	}
 }

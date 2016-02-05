@@ -14,11 +14,6 @@
 #ifndef SYMBOL_H_
 #define SYMBOL_H_
 
- struct entry {
-   char * lexptr;
-   int token;
- };
-
 void init();
 
 int lookup(char s[]);

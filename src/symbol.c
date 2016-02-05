@@ -16,6 +16,11 @@
 #define STRMAX 999
 #define SYMMAX 999
 
+ struct entry {
+   char * lexptr;
+   int token;
+ };
+
 struct entry symtable[SYMMAX];
 
 char lexemes[STRMAX];
@@ -23,7 +28,8 @@ char lexemes[STRMAX];
 int lastchar = -1;
 int lastentry = 0;
 
-struct entry keywords[] = {
+
+ struct entry keywords[] = {
    "begin", BEGIN,
    "end", END,
    "done", DONE,
@@ -36,6 +42,7 @@ struct entry keywords[] = {
    "char", CHAR,
    "string", STRING,
    "%", MODUS,
+   "program", PROGRAM,
    0, 0
  };
 

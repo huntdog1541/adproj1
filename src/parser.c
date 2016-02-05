@@ -18,6 +18,7 @@ int parser(char * fileName)
 	puts("Parser ran");
 	struct content con;
 	contentInit(&con);
+	printSymbol();
 	strcpy(con.fileName, fileName);
 	lex(&con);
 	return 0;

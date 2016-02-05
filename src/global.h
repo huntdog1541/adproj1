@@ -17,20 +17,21 @@
 #define NOT_FOUND 0
 
 //Program Control
-#define BEGIN 300
-#define END 301
-#define DONE 302
-#define IF 303
-#define WHILE 304
-#define DO 305
-#define FOR 306
-#define LPARENTSIS 307
-#define RPARENTSIS 308
-#define LBRACKET 309
-#define RBRACKET 310
-#define SEMICOLON 311
-#define PERIOD 312
-#define UNDERSCORE 313
+#define PROGRAM 300
+#define BEGIN 301
+#define END 302
+#define DONE 303
+#define IF 304
+#define WHILE 305
+#define DO 306
+#define FOR 307
+#define LPARENTSIS 308
+#define RPARENTSIS 309
+#define LBRACKET 310
+#define RBRACKET 311
+#define SEMICOLON 312
+#define PERIOD 313
+#define UNDERSCORE 314
 
 //Operators and Comparators
 #define ASSIGNMENT 400
