@@ -20,7 +20,8 @@ int parser(char * fileName)
 	contentInit(&con);
 	printSymbol();
 	strcpy(con.fileName, fileName);
-	lex(&con);
+	//lex(&con);
+	startParse();
 	return 0;
 }
 
@@ -36,4 +37,21 @@ void contentInit(struct content * con)
 		con->errorMessage[i] = 0;
 		con->outputFile[i] = 0;
 	}
+}
+
+int startParse(struct content * con)
+{
+	int ans = 0;
+	openLexFile(con);
+	while(!con->isDone)
+	{
+		int t = getNextToken(con);
+		//printf("The token returned is %d\n", t);
+	}
+	return ans;
+}
+
+void findProgram()
+{
+
 }

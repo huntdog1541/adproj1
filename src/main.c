@@ -16,9 +16,10 @@ int main(int argc, char ** argv)
 	puts("Hello World!");
 	char str[256];
 	strcpy(str, "test.txt");
-	char dir[256];
-	getcwd(dir, sizeof(dir));
-	printf("The directory is %s\n", dir);
+	//char dir[256];
+	//getcwd(dir, sizeof(dir));
+	//printf("The directory is %s\n", dir);
+	init();
 	parser(str);
 
 	return 0;

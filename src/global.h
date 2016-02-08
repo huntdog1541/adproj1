@@ -32,6 +32,9 @@
 #define SEMICOLON 312
 #define PERIOD 313
 #define UNDERSCORE 314
+#define SINGLECOMMENT 315
+#define STARTMULTIPLECOMMENT 316
+#define ENDMULTIPLECOMMENT 317
 
 //Operators and Comparators
 #define ASSIGNMENT 400

@@ -14,16 +14,34 @@
 #ifndef SYMBOL_H_
 #define SYMBOL_H_
 
+/* init - initializes the symbol table
+ * return - returns no value
+ */
 void init();
 
+/* lookup - given a string to lookup in the symbol table
+ * return - value of the location of the keyword in the symbol table
+ */
 int lookup(char s[]);
 
+/* insert - inserts a value into the symbol table
+ * return - 
+ */
 int insert(char s[], int tok);
 
+/* getLexeme - gets the keyword from the table given a position in the table
+ * return - returns the string taken from the symbol table
+ */
 char * getLexeme(int pos);
 
+/* getTokenType - gets the token value from the table given a position in the symbol table
+ * return - returns the token value
+ */
 int getTokenType(int pos);
 
+/* printSymbol - prints all the content from the symbol table - a ultilty function
+ * return - returns no value
+ */
 void printSymbol();
 
 #endif /* SYMBOL_H_ */

@@ -18,50 +18,65 @@ int tokenval = 0;
 int lex(struct content * con)
 {
 	printf("File is %s \n", con->fileName);
-	char lexbuf[BSIZE];
 	fin = fopen(con->fileName, "r");
 	if(!fin)
 	{
 		strcpy(con->errorMessage, "Can't open file");
-		error(con);
+		fatalError(con);
 	}
 	int t = fgetc(fin);
 	if(t == EOF)
 	{
-		strcpy(con->errorMessage, "Empty File");
-		error(con);
+	strcpy(con->errorMessage, "Empty File");
+	error(con);
 	}
-	while(con->isDone != 1)
+	
+	printf("%c", t);
+	if((t == ' ') || (t == '/t'))
 	{
-		//printf("%c", t);
-		if((t == ' ') && (t == '/t'))
-		{
-			con->positionNumber++;//Avoid whitespace
-		}
-		else if(t == '\n')
-		{
-				con->lineNumber++;
-				con->positionNumber = 0;
-		}
-		else if(isalpha(t))
-		{
-			ungetc(t, fin);
-			getID(con);
-		}
-		else if(t == EOF)
-			con->isDone = 1;
-		else {
-			tokenval = NONE;
-			printf("  %c:%d\n", t, t);
-		}
-
-		t = fgetc(fin);
+		con->positionNumber++;//Avoid whitespace
 	}
+	else if(t == '\n')
+	{
+			con->lineNumber++;
+			con->positionNumber = 0;
+	}
+	else if(isalpha(t))
+	{
+		ungetc(t, fin);
+		getID(con);
+	}
+	else if(isdigit(t))
+	{
+		ungetc(t, fin);
+		getNumber(con);
+	}
+	else {
+		checkSpecialChar(t, con);
+		printf("  %c:%d\n", t, t);
+	}
+		t = fgetc(fin);
 	printf("\n");
 	fclose(fin);
 	return 0;
 }
 
+/* openLexFile - sets the global file pointer
+ * return - no return value
+ */
+void openLexFile(struct content * con)
+{
+	fin = fopen(con->fileName, "r");
+	if(!fin)
+	{
+		perror("File Not Found\n");
+		exit(EXIT_FAILURE);
+	}
+}
+
+/* getID - gets the ID name from the file.
+ * return - no return value, sets the tokenval integer.
+ */
 void getID(struct content * con)
 {
 		int i = 0, p = 0;
@@ -118,42 +133,48 @@ char * getToken(char * buffer, char t)
 	return buffer;
 }*/
 
+/* getNextToken - gets the next token
+ * return - returns the token value
+ */
 int getNextToken(struct content * con)
 {
 	char temp;
-	int p, b = 0, ans = 0;
+	int b = 0, ans = 0;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{
 		con->isDone = 1;
 		return 0;
 	}
-	if((temp == ' ') || (temp == '\t'))
+	else if((temp == ' ') || (temp == '\t'))
 	{
 		absorbSpace(con);
 		temp = fgetc(fin);
 	}
-  if(temp == '\n')
+  	else if(temp == '\n')
 	{
 		con->lineNumber++;
 		temp = fgetc(fin);
 	}
-	if(isalnum(temp))
+	else if(isalpha(temp))
 	{
 		ungetc(temp, fin);
 		getID(con);
-		return 0;
+		return tokenval;
 	}
-	if(isdigit(temp))
+	else if(isdigit(temp))
 	{
 		ungetc(temp, fin);
-		getNumber();
-		return 0;
+		getNumber(con);
+		return tokenval;
 	}
-	int r = checkSpecialChar(temp);
+	int r = checkSpecialChar(temp, con);
 	return r;
 }
 
+/* absorbSpace - runs a loop to absorb all spaces between words
+ * return - no return value
+ */
 void absorbSpace(struct content * con)
 {
 	char temp = fgetc(fin);
@@ -165,44 +186,121 @@ void absorbSpace(struct content * con)
 	ungetc(temp, fin);
 }
 
-char lookahead(struct content * con)
+/* lookahead - gets a the next character value but returns the character to the file
+ * return - returns the next value from the file
+ */
+char lookahead()
 {
 	char t = fgetc(fin);
 	ungetc(t, fin);
 	return t;
 }
 
-
-void getNumber()
+/* getNumber - gets a constant value from the program
+ * return - no return value, but does set the tokenval
+ */
+void getNumber(struct content * con)
 {
 	char t = fgetc(fin);
+	con->positionNumber++;
 	char buffer[BSIZE];
 	int i = 0;
 	buffer[i++] = t;
-	/*
-	while(isDigit(t))
+	while(isdigit(t))
 	{
 		buffer[i++] = t;
 		t = fgetc(fin);
+		con->positionNumber++;
 	}
-	*/
 	ungetc(t, fin);
+	con->positionNumber--;
 }
 
-
-int checkSpecialChar(char temp)
+/* checkSpecialChar -  check special characters that are not alphabetical or digits
+ * return - returns the token value for the special sequence found
+ */
+int checkSpecialChar(char temp, struct content * con)
 {
+	char t;
+	int er;
 	switch(temp)
 	{
 		case '=':
+			if((lookahead() == '='))
+			{
+				t = fgetc(fin);
+				con->positionNumber++;
+				tokenval = EQUALITY;
+			}
+			else
+				tokenval = ASSIGNMENT;
+			break;
 		case '/':
+			if((lookahead() == '/'))
+			{
+				t = fgetc(fin);
+				con->positionNumber++;
+				tokenval = SINGLECOMMENT;
+			}
+			else if((lookahead() == '*'))
+			{
+				ungetc(temp, fin);
+				con->positionNumber--;
+				er = absorbMultComment(con);
+				if(er == 0)
+					tokenval = STARTMULTIPLECOMMENT;
+				else
+				{
+					strcpy(con->errorMessage, "Multiple Line comment Error");
+					error(con);
+				}
+			}
+			else
+				tokenval = DIVISION;
+			break;
 		case '+':
+				tokenval = ADDITION;
+				break;
 		case '-':
+				tokenval = SUBTRACTION;
+				break;
+		case '>':
+			if((lookahead() == '='))
+			{
+				t = fgetc(fin);
+				con->positionNumber++;
+				tokenval = GREATERTHANANDEQUAL;
+			}
+			else
+				tokenval = GREATERTHAN;
+			break;
+		case '<':
+			if((lookahead() == '='))
+			{
+				t = fgetc(fin);
+				con->positionNumber++;
+				if((lookahead() == '>'))
+				{
+					t = fgetc(fin);
+					con->positionNumber++;
+					tokenval = STRINGEQUAL;
+				} 
+				tokenval = LESSERTHANANDEQUAL;
+			}
+			else
+				tokenval = LESSERTHAN;
+			break;
+		case ';' :
+			tokenval = SEMICOLON;
+			break;
 		default: break;
 	}
 	return 1;
 }
 
+/* printAllString - prints out the entire content of a string, even space characters
+ * return - no return value
+ */
 void printAllString(char * string)
 {
 	int i, size = strlen(string);
@@ -210,4 +308,59 @@ void printAllString(char * string)
 	{
 		printf("Char: %c :: Num: %d\n", string[i], string[i]);
 	}
+}
+
+/* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
+ * return - no return value
+ */
+int absorbMultComment(struct content * con)
+{
+	int answer = 1;
+	char temp;
+	if(checkStartMultipleComment(con))
+	{
+		temp = fgetc(fin);
+		con->positionNumber++;
+		while(checkEndMultipleComment(temp, con))
+		{
+			temp = fgetc(fin);
+			con->positionNumber++;
+		}
+	}
+	else
+		answer = 0;
+	return answer;
+}
+
+/* checkStartMultipleComment - checks to see if the start characters are equal to '/*'
+ * return - returns 0 - if error and 1 - if true
+ */
+int checkStartMultipleComment(struct content * con)
+{
+	int answer = 0;
+	char temp1, temp2;
+	temp1 = fgetc(fin);
+	temp2 = fgetc(fin);
+	if(temp1 == '/')
+		if(temp2 == '*')
+			answer = 1;
+
+	return answer;
+}
+
+/* checkEndMultipleComment - checks to see if the end characters are equal end multiple comment sequence
+ * return - returns 0 - if error and 1 - if true
+ */
+int checkEndMultipleComment(char temp, struct content * con)
+{
+	int answer = 1;
+	if(temp == '*')
+	{
+		if(lookahead() == '/')
+		{
+			temp = fgetc(fin);
+			answer = 0;
+		}
+	}
+	return answer;
 }

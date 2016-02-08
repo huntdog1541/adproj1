@@ -30,6 +30,7 @@ int lastentry = 0;
 
 
  struct entry keywords[] = {
+   "program", PROGRAM,
    "begin", BEGIN,
    "end", END,
    "done", DONE,
@@ -37,12 +38,32 @@ int lastentry = 0;
    "while", WHILE,
    "do", DO,
    "for", FOR,
+   "(", LPARENTSIS,
+    ")", RPARENTSIS,
+    "[", LBRACKET,
+    "]", RBRACKET,
+    ";", SEMICOLON,
+    ".", PERIOD,
+    "_", UNDERSCORE,
+    "//", SINGLECOMMENT,
+    "/*", STARTMULTIPLECOMMENT,
+    "*/", ENDMULTIPLECOMMENT,
+    "=", ASSIGNMENT,
+    "==", EQUALITY,
+    "+", ADDITION,
+    "-", SUBTRACTION, 
+    "*", MULTIPLICATION,
+    "/", DIVISION,
+    "%", MODUS,
+    ">", GREATERTHAN,
+    "<", LESSERTHAN,
+    ">=", GREATERTHANANDEQUAL,
+    "<=", LESSERTHANANDEQUAL,
+    "<=>", STRINGEQUAL,
    "int", INT,
    "float", FLOAT,
    "char", CHAR,
    "string", STRING,
-   "%", MODUS,
-   "program", PROGRAM,
    0, 0
  };
 
