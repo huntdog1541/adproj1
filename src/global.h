@@ -15,6 +15,7 @@
 #define NONE -1
 #define EOS '\0'
 #define NOT_FOUND 0
+#define COMPILE_ERROR 3
 
 //Program Control
 #define PROGRAM 300

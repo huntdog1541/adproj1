@@ -30,7 +30,7 @@ int lex(struct content * con)
 	strcpy(con->errorMessage, "Empty File");
 	error(con);
 	}
-	
+
 	printf("%c", t);
 	if((t == ' ') || (t == '/t'))
 	{
@@ -84,20 +84,22 @@ void getID(struct content * con)
 		char lexbuf[BSIZE];
 		while(isalnum(temp))
 		{
-			lexbuf[i] = temp;
-			i++;
+			lexbuf[i++] = temp;
 			temp = fgetc(fin);
-			if(temp == '_')
+			con->positionNumber++;
+			if(temp == '_')  //Check to see if a character has an underscore
 			{
-				printf("Found underscore\n");
-				if(isalnum(lookahead(con)))
+				if(isalnum(lookahead(con)))  //See if the next character is a letter or number
 				{
 					lexbuf[i++] = temp;
 					temp = fgetc(fin);
+					con->positionNumber++;
 				}
 				else
 				{
 					fprintf(stderr, "Error\n");
+					strcpy(con->errorMessage, "Error: Invalid ID name");
+					error(con)
 				}
 			}
 			if(i >= BSIZE)
@@ -106,10 +108,12 @@ void getID(struct content * con)
 				error(con);
 			}
 		}
+		ungetc(temp, fin);
+		con->positionNumber--;
 		lexbuf[i] = EOS;
 		if(temp == EOF)
 		{
-			ungetc(temp, fin);
+			ungetc(temp, fin);  //Ungets the EOF so to avoid error when calling getc again after end of file
 			con->isDone = 1;
 		}
 		printf("got alpha[%s]\n", lexbuf);
@@ -117,9 +121,8 @@ void getID(struct content * con)
 		p = lookup(lexbuf);
 		if(p == NOT_FOUND)
 			p = insert(lexbuf, ID);
-		tokenval = p;
+		tokenval = getTokenType(p);
 		printf("Token Value %d\n", tokenval);
-		printf("%d\n", getTokenType(p));
 }
 
 /*
@@ -149,12 +152,12 @@ int getNextToken(struct content * con)
 	else if((temp == ' ') || (temp == '\t'))
 	{
 		absorbSpace(con);
-		temp = fgetc(fin);
+		return (getNextToken(con));
 	}
   	else if(temp == '\n')
 	{
 		con->lineNumber++;
-		temp = fgetc(fin);
+		return (getNextToken(con));
 	}
 	else if(isalpha(temp))
 	{
@@ -222,7 +225,7 @@ void getNumber(struct content * con)
 int checkSpecialChar(char temp, struct content * con)
 {
 	char t;
-	int er;
+	int ans = 0, er = 0;
 	switch(temp)
 	{
 		case '=':
@@ -230,17 +233,17 @@ int checkSpecialChar(char temp, struct content * con)
 			{
 				t = fgetc(fin);
 				con->positionNumber++;
-				tokenval = EQUALITY;
+				ans = EQUALITY;
 			}
 			else
-				tokenval = ASSIGNMENT;
+				ans = ASSIGNMENT;
 			break;
 		case '/':
 			if((lookahead() == '/'))
 			{
 				t = fgetc(fin);
 				con->positionNumber++;
-				tokenval = SINGLECOMMENT;
+				ans = SINGLECOMMENT;
 			}
 			else if((lookahead() == '*'))
 			{
@@ -248,7 +251,7 @@ int checkSpecialChar(char temp, struct content * con)
 				con->positionNumber--;
 				er = absorbMultComment(con);
 				if(er == 0)
-					tokenval = STARTMULTIPLECOMMENT;
+					ans = STARTMULTIPLECOMMENT;
 				else
 				{
 					strcpy(con->errorMessage, "Multiple Line comment Error");
@@ -256,23 +259,23 @@ int checkSpecialChar(char temp, struct content * con)
 				}
 			}
 			else
-				tokenval = DIVISION;
+				ans = DIVISION;
 			break;
 		case '+':
-				tokenval = ADDITION;
+				ans = ADDITION;
 				break;
 		case '-':
-				tokenval = SUBTRACTION;
+				ans = SUBTRACTION;
 				break;
 		case '>':
 			if((lookahead() == '='))
 			{
 				t = fgetc(fin);
 				con->positionNumber++;
-				tokenval = GREATERTHANANDEQUAL;
+				ans = GREATERTHANANDEQUAL;
 			}
 			else
-				tokenval = GREATERTHAN;
+				ans = GREATERTHAN;
 			break;
 		case '<':
 			if((lookahead() == '='))
@@ -283,19 +286,19 @@ int checkSpecialChar(char temp, struct content * con)
 				{
 					t = fgetc(fin);
 					con->positionNumber++;
-					tokenval = STRINGEQUAL;
-				} 
-				tokenval = LESSERTHANANDEQUAL;
+					ans = STRINGEQUAL;
+				}
+				ans = LESSERTHANANDEQUAL;
 			}
 			else
-				tokenval = LESSERTHAN;
+				ans = LESSERTHAN;
 			break;
 		case ';' :
-			tokenval = SEMICOLON;
+			ans = SEMICOLON;
 			break;
 		default: break;
 	}
-	return 1;
+	return ans;
 }
 
 /* printAllString - prints out the entire content of a string, even space characters
@@ -332,7 +335,7 @@ int absorbMultComment(struct content * con)
 	return answer;
 }
 
-/* checkStartMultipleComment - checks to see if the start characters are equal to '/*'
+/* checkStartMultipleComment - checks to see if the start characters are equal to start multiple line comment
  * return - returns 0 - if error and 1 - if true
  */
 int checkStartMultipleComment(struct content * con)

@@ -18,7 +18,7 @@ int parser(char * fileName)
 	puts("Parser ran");
 	struct content con;
 	contentInit(&con);
-	printSymbol();
+	//printSymbol();
 	strcpy(con.fileName, fileName);
 	//lex(&con);
 	startParse();
@@ -41,12 +41,12 @@ void contentInit(struct content * con)
 
 int startParse(struct content * con)
 {
-	int ans = 0;
+	int ans = 0, t = 0;
 	openLexFile(con);
 	while(!con->isDone)
 	{
-		int t = getNextToken(con);
-		//printf("The token returned is %d\n", t);
+		t = getNextToken(con);
+		printf("The token returned is %d\n", t);
 	}
 	return ans;
 }
