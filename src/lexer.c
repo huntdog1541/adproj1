@@ -99,7 +99,7 @@ void getID(struct content * con)
 				{
 					fprintf(stderr, "Error\n");
 					strcpy(con->errorMessage, "Error: Invalid ID name");
-					error(con)
+					error(con);
 				}
 			}
 			if(i >= BSIZE)
@@ -117,7 +117,7 @@ void getID(struct content * con)
 			con->isDone = 1;
 		}
 		printf("got alpha[%s]\n", lexbuf);
-		printAllString(lexbuf);
+		//printAllString(lexbuf);
 		p = lookup(lexbuf);
 		if(p == NOT_FOUND)
 			p = insert(lexbuf, ID);
