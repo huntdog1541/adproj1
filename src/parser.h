@@ -50,4 +50,6 @@ int startParse();
  */
 void findProgram();
 
+void declareData(struct content * con);
+
 #endif /* PARSER_H_ */

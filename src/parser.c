@@ -18,10 +18,11 @@ int parser(char * fileName)
 	puts("Parser ran");
 	struct content con;
 	contentInit(&con);
-	printSymbol();
+	//printSymbol();
 	strcpy(con.fileName, fileName);
 	//lex(&con);
 	startParse();
+	//printSymbol();
 	return 0;
 }
 
@@ -69,7 +70,26 @@ void declareData(struct content * con)
 				t = getNextToken(con);
 				if(t == ID)
 				{
-
+					t = getNextToken(con);
+					if(t == ASSIGNMENT)
+					{
+						t = getNextToken(con);
+						if(t != NUMERICAL_CONSTANT)
+						{
+							strcpy(con->errorMessage, "Invalid Initialization statement\n");
+							error(con);
+						}
+					}
+					else if(t == COMMA)
+					{
+						t = ID;
+						continue;
+					}
+					else
+					{
+						strcpy(con->errorMessage, "Invalid Assignment statement\n");
+						error(con);
+					}
 				}
 				else
 				{
@@ -79,15 +99,8 @@ void declareData(struct content * con)
 		}
 }
 
-void initializeData(struct content * con)
-{
-	int t = getNextToken(con);
-
-}
-
 void startProgram(struct content * con)
 {
 		con->canAddID = 0;
-		int t =getNextToken(con);
-
+		int t = getNextToken(con);
 }

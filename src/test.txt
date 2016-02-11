@@ -1,4 +1,5 @@
 program
+int a, b;
 begin
 a = b + 3;
 end

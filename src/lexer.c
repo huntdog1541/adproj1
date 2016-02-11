@@ -67,6 +67,7 @@ int lex(struct content * con)
 void openLexFile(struct content * con)
 {
 	fin = fopen(con->fileName, "r");
+	printf("File Name: %s\n", con->fileName);
 	if(!fin)
 	{
 		perror("File Not Found\n");
@@ -151,7 +152,7 @@ char * getToken(char * buffer, char t)
 int getNextToken(struct content * con)
 {
 	char temp;
-	int b = 0, ans = 0;
+	int b = 0, ans = 0, r = 0;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{
@@ -180,7 +181,7 @@ int getNextToken(struct content * con)
 		getNumber(con);
 		return tokenval;
 	}
-	int r = checkSpecialChar(temp, con);
+	r = checkSpecialChar(temp, con);
 	return r;
 }
 
