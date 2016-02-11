@@ -40,5 +40,6 @@ void printAllErrors(struct content * con);
 
 void printSingleError(struct err * er);
 
+void insertError(char * str, struct content * con);
 
 #endif /* ERROR_H_ */

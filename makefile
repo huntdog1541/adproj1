@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -c -Wall
 
-TARGET = Parse
+TARGET = Parser
 MAIN = src/main
 PARSER = src/parser
 LEXER = src/lexer
@@ -28,3 +28,8 @@ error.o: $(ERROR).c $(ERROR).h
 
 symbol.o: $(SYMBOL).c $(SYMBOL).h
 	$(CC) $(CFLAGS) $(SYMBOL).c $(SYMBOL).h
+
+.PHONY : clean
+
+clean :
+			-rm -f *.o *.gch Parser.exe

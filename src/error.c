@@ -22,18 +22,18 @@
 	 exit(1);
  }
 
+ void insertError(char * str, struct content * con)
+ {
+	 sprintf(con->errorMessage, "Error at line %d position %d : %s \n", con->lineNumber, con->positionNumber, con->errorMessage);
+	 addError(con);
+ }
+
  void addError(struct content * con)
  {
- 	struct err * temp = con->error;
- 	if(con->errorNumber > 0)
- 	{
- 		temp = findErrorMessage(con);
- 	}
- 	else
- 	{
- 		con->error = (struct err*)malloc(sizeof(struct err));
- 		temp = con->error;
- 	}
+ 	struct err * temp = findErrorMessage(con);
+
+ 	temp->nextMessage = (struct err*)malloc(sizeof(struct err));
+ 	temp = temp->nextMessage;
  	strcpy(temp->mess, con->errorMessage);
  	temp->lineNumber = con->lineNumber;
  	temp->posNumber = con->positionNumber;
