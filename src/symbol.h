@@ -27,7 +27,7 @@ int lookup(char s[]);
 /* insert - inserts a value into the symbol table
  * return - 
  */
-int insert(char s[], int tok);
+int insert(char s[], int tok, char tN[]);
 
 /* getLexeme - gets the keyword from the table given a position in the table
  * return - returns the string taken from the symbol table

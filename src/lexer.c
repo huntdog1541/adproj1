@@ -119,11 +119,20 @@ void getID(struct content * con)
 		printf("got alpha[%s]\n", lexbuf);
 		//printAllString(lexbuf);
 		p = lookup(lexbuf);
-		if(p == NOT_FOUND)
-			p = insert(lexbuf, ID);
+		if((p == NOT_FOUND) && (con->canAddID == 1))
+			p = insert(lexbuf, ID, "ID");
+		else
+		{
+			if(con->canAddID == 0)
+			{
+				strcpy(con->errorMessage, "Can't add ID");
+				error(con);
+			}
+		}
 		tokenval = getTokenType(p);
 		printf("Token Value %d\n", tokenval);
 }
+
 
 /*
 char * getToken(char * buffer, char t)

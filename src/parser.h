@@ -24,6 +24,7 @@ struct content {
 	int positionNumber;
 	char errorMessage[BSIZE];
 	int isDone;
+	int canAddID;
 	char outputFile[BSIZE];
 	struct err * error;
 	int errorNumber;
