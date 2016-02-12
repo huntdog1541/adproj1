@@ -1,0 +1,12 @@
+program
+int a = 6, b;
+int c = 7;
+begin
+if a < b;
+// Comment Two
+a = b + c;
+else
+b = c - a;
+end_if
+// Comment
+end

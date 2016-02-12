@@ -1,0 +1,9 @@
+program
+int a = 6, b;
+int c = 7;
+begin
+if a < b;
+a = b + c;
+end_if
+// Comment
+end

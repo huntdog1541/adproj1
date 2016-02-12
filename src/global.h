@@ -55,6 +55,8 @@
 #define GREATERTHANANDEQUAL 409
 #define LESSERTHANANDEQUAL 410
 #define STRINGEQUAL 411
+#define OPERATOR 412
+#define COMPARATOR 413
 
 //Data Types and IDs
 #define INT 500

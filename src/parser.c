@@ -23,6 +23,7 @@ int parser(char * fileName)
 	//lex(&con);
 	startParse();
 	//printSymbol();
+	printf("Successful Parse\n");
 	return 0;
 }
 
@@ -52,15 +53,16 @@ int startParse(struct content * con)
 	t = getNextToken(con);
 	if(t == INT)
 	{
-		declareData(con);
+		t = declareData(con);
 	}
-	else if(t == BEGIN)
+	if(t == BEGIN)
 	{
-
+		t = beginProgramParse(t, con);
 	}
 	else
 	{
-
+		strcpy(con->errorMessage, "No Statements to run\n");
+		error(con);
 	}
 	return ans;
 }
@@ -70,16 +72,20 @@ void findProgram()
 
 }
 
-void beginParse(struct content * con)
+int beginProgramParse(int tok, struct content * con)
 {
-	int t = 0;
-
-
-
-
+	if(tok == BEGIN)
+	{
+		tok = getNextToken(con);
+		while((!con->isDone) && (tok != END))
+		{
+			tok = progStatement(tok, con);
+		}
+	}
+	return tok;
 }
 
-void declareData(struct content * con)
+int declareData(struct content * con)
 {
 		con->canAddID = 1;
 		int t = INT;   //Already checked in previous function
@@ -87,19 +93,25 @@ void declareData(struct content * con)
 		{
 				if(matchToken(ID, con))
 				{
-					if(matchToken(ASSIGNMENT, con))
+					t = getNextToken(con);
+					if(t == ASSIGNMENT)
 					{
 						if(!matchToken(NUMERICAL_CONSTANT, con))
 						{
 							strcpy(con->errorMessage, "Invalid Initialization statement\n");
 							error(con);
 						}
-						if(matchToken(COMMA, con))
+						t = getNextToken(con);
+						if(t == COMMA)
 						{
 							t = INT;
 						}
+						if(t == SEMICOLON)
+						{
+							t = getNextToken(con);
+						}
 					}
-					else if(COMMA)
+					else if(t == COMMA)
 					{
 						t = INT;
 						continue;
@@ -121,18 +133,21 @@ void declareData(struct content * con)
 				}
 		}
 		con->canAddID = 0;
+		return t;
 }
 
-void progStatement(struct content * con)
+int progStatement(int tok, struct content * con)
 {
-	int t = getNextToken(con);
-	switch(t)
+	switch(tok)
 	{
 		case ID:
+				controlID(tok, con);
 				break;
 		case IF:
+				controlIf(tok, con);
 				break;
 		case WHILE:
+				controlWhile(tok, con);
 				break;
 		case END:
 					con->isDone = 1;
@@ -141,21 +156,159 @@ void progStatement(struct content * con)
 			error("Could not find valid Statement\n");
 			break;
 	}
+	return getNextToken(con);
 }
 
-void controlIf(struct content * con)
+void controlIf(int tok, struct content * con)
 {
+		if(tok == IF)
+		{
+			if(controlCondition(con))
+			{
+				tok = getNextToken(con);
+				while((tok != ELSE) && (tok != END_IF))
+				{
+					tok = progStatement(tok, con);
+				}
+				if(tok == ELSE)
+				{
+						tok = getNextToken(con);
+						while((tok !=  END_IF) && (con->isDone == 0))
+						{
+							tok = progStatement(tok, con);
+						}
+						if(tok != END_IF)
+						{
+							strcpy(con->errorMessage, "Invalid End of While loop\n");
+							error(con);
+						}
+				}
+				else if(tok == END_IF)
+				{
 
+				}
+			}
+			else
+			{
+				strcpy(con->errorMessage, "Invalid Expression\n");
+				error(con);
+			}
+		}
 }
 
-void controlWhile(struct content * con)
+void controlWhile(int tok, struct content * con)
 {
-
+	if(tok == WHILE)
+	{
+		if(controlCondition(con))
+		{
+			matchToken(DO, con);
+			tok = getNextToken(con);
+			while((tok != END_WHILE) && (con->isDone == 0))
+			{
+				tok = progStatement(tok, con);
+			}
+			if(tok == END_WHILE)
+			{
+				//Do Nothing
+			}
+			else
+			{
+				strcpy(con->errorMessage, "Invalid End of While loop\n");
+				error(con);
+			}
+		}
+	}
 }
 
-void controlID(struct content * con)
+int controlExpression(struct content * con)
 {
-		int t = ID;
+	int answer = 0, t = getNextToken(con);
+	if((t == ID) || (t == NUMERICAL_CONSTANT))
+	{
+		if(matchOperator(con) == OPERATOR)
+		{
+			t = getNextToken(con);
+			if(!(t == ID) && !(t == NUMERICAL_CONSTANT))
+			{
+				strcpy(con->errorMessage, "Didn't find ending id or number\n");
+				error(con);
+			}
+			matchToken(SEMICOLON, con);
+			answer = 1;
+		}
+		else
+		{
+			strcpy(con->errorMessage, "Didn't find operator\n");
+			error(con);
+		}
+	}
+	return answer;
+}
+
+int controlCondition(struct content * con)
+{
+	int answer = 0, t = getNextToken(con);
+	if((t == ID) || (t == NUMERICAL_CONSTANT))
+	{
+		if(matchOperator(con) == COMPARATOR)
+		{
+			t = getNextToken(con);
+			if(!(t == ID) && !(t == NUMERICAL_CONSTANT))
+			{
+				strcpy(con->errorMessage, "Didn't find ending id or number\n");
+				error(con);
+			}
+			matchToken(SEMICOLON, con);
+			answer = 1;
+		}
+		else
+		{
+			strcpy(con->errorMessage, "Didn't find comparator\n");
+			error(con);
+		}
+	}
+	return answer;
+}
+
+
+void controlID(int tok, struct content * con)
+{
+		if(tok == ID)
+		{
+			if(matchToken(ASSIGNMENT, con))
+			{
+				if(controlExpression(con))
+				{
+
+				}
+			}
+		}
+}
+
+int matchOperator(struct content * con)
+{
+	int ans = 0, t = getNextToken(con);
+	switch(t)
+	{
+		case ADDITION:
+		case SUBTRACTION:
+		case DIVISION:
+		case MODUS:
+		case MULTIPLICATION:
+				 ans = OPERATOR;
+				 break;
+		case GREATERTHAN:
+		case GREATERTHANANDEQUAL:
+		case LESSERTHAN:
+		case LESSERTHANANDEQUAL:
+		case STRINGEQUAL:
+				ans = COMPARATOR;
+				break;
+		default:
+				break;
+	}
+	return ans;
 }
 
 void startProgram(struct content * con)
@@ -168,33 +321,11 @@ int matchToken(int tokenValue, struct content * con)
 {
 	int answer = 0;
 	int temp = getNextToken(con);
-	if(temp == SINGLECOMMENT)
-			absorbSingleLine(con);
-	else if(temp == STARTMULTIPLECOMMENT)
-			absorbMultComment(con);
-	else if(temp == tokenValue)
+	if(temp == tokenValue)
 		answer = 1;
 	else
 	{
 		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, temp);
 		error(con);
-	}
-}
-
-void absorbSingleLine(struct content * con)
-{
-	int temp = getNextToken(con);
-	while(temp != END_OF_LINE)
-	{
-		temp = getNextToken(con);
-	}
-}
-
-void absorbMultLineComment(struct content * con)
-{
-	int temp = getNextToken(con);
-	while(temp != ENDMULTIPLECOMMENT)
-	{
-		temp = getNextToken(con);
 	}
 }

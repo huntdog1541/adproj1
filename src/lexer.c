@@ -255,7 +255,8 @@ int checkSpecialChar(char temp, struct content * con)
 			{
 				t = fgetc(fin);
 				con->positionNumber++;
-				ans = SINGLECOMMENT;
+				absorbSingleLineComment(con);
+				ans = getNextToken(con);
 			}
 			else if((lookahead() == '*'))
 			{
@@ -350,6 +351,16 @@ int absorbMultComment(struct content * con)
 	return answer;
 }
 
+void absorbSingleLineComment(struct content * con)
+{
+	char temp = getc(fin);
+	while(temp != '\n')
+	{
+		temp = getc(fin);
+	}
+	con->lineNumber++;
+	con->positionNumber = 0;
+}
 /* checkStartMultipleComment - checks to see if the start characters are equal to start multiple line comment
  * return - returns 0 - if error and 1 - if true
  */
