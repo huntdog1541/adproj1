@@ -1,0 +1,14 @@
+#!/bin/bash
+#My First script
+
+make
+./Parser testfiles/test1.txt
+./Parser testfiles/test2.txt
+./Parser testfiles/test3.txt
+./Parser testfiles/test4.txt
+
+./Parser testfiles/illegaltest1.txt
+./Parser testfiles/illegaltest2.txt
+./Parser testfiles/illegaltest3.txt
+./Parser testfiles/illegaltest4.txt
+make clean

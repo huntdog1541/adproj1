@@ -24,6 +24,7 @@ Setup and Compilation
 3. Environment: Runs on a linux system with GNU, preferably ran in the mult-platform lab.
 4. Compiling: It comes with a makefile. After unzipping the file, “cd” into the new folder.  From that location type in make.  After a success compilation you are ready to run the files.
 Running the program:  In the same directory in which you ran the make command, type “make legal” to run 4 test files of legal grammar.  To run the illegal test files type “make illegal”.  Due to the fact that after an error has occurred the program shutsdown, you may not see the other illegal tests run. In that case you will have to run each test adding a number at the end of illegal like “make illegal1”, “make illegal2”, “illegal3”, “make illegal4”.  I am aware of this problem and I am working to fix it.
+5. Run batch file instead of makefile.  Give the right permissions to run the batch file then type "./batch" which will run a compilation then run each individual test.
 
 Output: All output goes to the console.
 	./Parser testfiles/test1.txt
