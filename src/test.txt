@@ -1,5 +1,5 @@
 program
-int a, b;
+int a = 6, b;
 begin
 a = b + 3;
 end

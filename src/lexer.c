@@ -122,7 +122,7 @@ void getID(struct content * con)
 		p = lookup(lexbuf);
 		if((p == NOT_FOUND) && (con->canAddID == 1))
 			p = insert(lexbuf, ID, "ID");
-		else
+		else if(p == NOT_FOUND)
 		{
 			if(con->canAddID == 0)
 			{
@@ -227,6 +227,8 @@ void getNumber(struct content * con)
 	}
 	ungetc(t, fin);
 	con->positionNumber--;
+	int value = atoi(buffer);
+	tokenval = NUMERICAL_CONSTANT;
 }
 
 /* checkSpecialChar -  check special characters that are not alphabetical or digits
@@ -305,6 +307,9 @@ int checkSpecialChar(char temp, struct content * con)
 			break;
 		case ';' :
 			ans = SEMICOLON;
+			break;
+		case ',' :
+			ans = COMMA;
 			break;
 		default: break;
 	}

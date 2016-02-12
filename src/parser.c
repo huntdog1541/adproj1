@@ -45,13 +45,22 @@ int startParse(struct content * con)
 {
 	int ans = 0, t = 0;
 	openLexFile(con);
-	if(!con->isDone)
+	while(!matchToken(PROGRAM, con))
 	{
 		t = getNextToken(con);
-		printf("The token returned is %d\n", t);
-		while(t != PROGRAM)
-				t = getNextToken(con);
+	}
+	t = getNextToken(con);
+	if(t == INT)
+	{
 		declareData(con);
+	}
+	else if(t == BEGIN)
+	{
+
+	}
+	else
+	{
+
 	}
 	return ans;
 }
@@ -61,29 +70,43 @@ void findProgram()
 
 }
 
+void beginParse(struct content * con)
+{
+	int t = 0;
+
+
+
+
+}
+
 void declareData(struct content * con)
 {
 		con->canAddID = 1;
-		int t = getNextToken(con);
+		int t = INT;   //Already checked in previous function
 		while(t == INT)
 		{
-				t = getNextToken(con);
-				if(t == ID)
+				if(matchToken(ID, con))
 				{
-					t = getNextToken(con);
-					if(t == ASSIGNMENT)
+					if(matchToken(ASSIGNMENT, con))
 					{
-						t = getNextToken(con);
-						if(t != NUMERICAL_CONSTANT)
+						if(!matchToken(NUMERICAL_CONSTANT, con))
 						{
 							strcpy(con->errorMessage, "Invalid Initialization statement\n");
 							error(con);
 						}
+						if(matchToken(COMMA, con))
+						{
+							t = INT;
+						}
 					}
-					else if(t == COMMA)
+					else if(COMMA)
 					{
-						t = ID;
+						t = INT;
 						continue;
+					}
+					else if(t == SEMICOLON)
+					{
+						t = getNextToken(con);
 					}
 					else
 					{
@@ -97,10 +120,81 @@ void declareData(struct content * con)
 					error(con);
 				}
 		}
+		con->canAddID = 0;
+}
+
+void progStatement(struct content * con)
+{
+	int t = getNextToken(con);
+	switch(t)
+	{
+		case ID:
+				break;
+		case IF:
+				break;
+		case WHILE:
+				break;
+		case END:
+					con->isDone = 1;
+				break;
+		default:
+			error("Could not find valid Statement\n");
+			break;
+	}
+}
+
+void controlIf(struct content * con)
+{
+
+}
+
+void controlWhile(struct content * con)
+{
+
+}
+
+void controlID(struct content * con)
+{
+		int t = ID;
 }
 
 void startProgram(struct content * con)
 {
 		con->canAddID = 0;
 		int t = getNextToken(con);
+}
+
+int matchToken(int tokenValue, struct content * con)
+{
+	int answer = 0;
+	int temp = getNextToken(con);
+	if(temp == SINGLECOMMENT)
+			absorbSingleLine(con);
+	else if(temp == STARTMULTIPLECOMMENT)
+			absorbMultComment(con);
+	else if(temp == tokenValue)
+		answer = 1;
+	else
+	{
+		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, temp);
+		error(con);
+	}
+}
+
+void absorbSingleLine(struct content * con)
+{
+	int temp = getNextToken(con);
+	while(temp != END_OF_LINE)
+	{
+		temp = getNextToken(con);
+	}
+}
+
+void absorbMultLineComment(struct content * con)
+{
+	int temp = getNextToken(con);
+	while(temp != ENDMULTIPLECOMMENT)
+	{
+		temp = getNextToken(con);
+	}
 }

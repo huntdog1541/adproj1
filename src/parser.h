@@ -52,4 +52,6 @@ void findProgram();
 
 void declareData(struct content * con);
 
+void absorbMultLineComment(struct content * con);
+
 #endif /* PARSER_H_ */

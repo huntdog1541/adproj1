@@ -16,6 +16,7 @@
 #define EOS '\0'
 #define NOT_FOUND 0
 #define COMPILE_ERROR 3
+#define END_OF_LINE 4
 
 //Program Control
 #define PROGRAM 300
@@ -23,20 +24,23 @@
 #define END 302
 #define DONE 303
 #define IF 304
-#define WHILE 305
-#define DO 306
-#define FOR 307
-#define LPARENTSIS 308
-#define RPARENTSIS 309
-#define LBRACKET 310
-#define RBRACKET 311
-#define SEMICOLON 312
-#define PERIOD 313
-#define COMMA 314
-#define UNDERSCORE 315
-#define SINGLECOMMENT 316
-#define STARTMULTIPLECOMMENT 317
-#define ENDMULTIPLECOMMENT 318
+#define ELSE 305
+#define END_IF 306
+#define WHILE 307
+#define DO 308
+#define END_WHILE 309
+#define FOR 310
+#define LPARENTSIS 311
+#define RPARENTSIS 312
+#define LBRACKET 313
+#define RBRACKET 314
+#define SEMICOLON 315
+#define PERIOD 316
+#define COMMA 317
+#define UNDERSCORE 318
+#define SINGLECOMMENT 319
+#define STARTMULTIPLECOMMENT 320
+#define ENDMULTIPLECOMMENT 321
 
 //Operators and Comparators
 #define ASSIGNMENT 400
