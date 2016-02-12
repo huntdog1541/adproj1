@@ -16,12 +16,18 @@
 #define STRMAX 999
 #define SYMMAX 999
 
+/*
+ * struct entry - structure of symbol table where the string and tokenvalue are stored
+ */
  struct entry {
    char * lexptr;
    int token;
    char * tokenName;
  };
 
+/* symbol table - stores the string and tokenvalues
+ *
+ */
 struct entry symtable[SYMMAX];
 
 char lexemes[STRMAX];

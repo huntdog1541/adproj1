@@ -13,6 +13,9 @@
 #include "error.h"
 #include "symbol.h"
 
+/* parser - parser takes the steps to initialize steps
+ * return - return 0 if error, else returns 1
+ */
 int parser(char * fileName)
 {
 	puts("Parser ran");
@@ -24,6 +27,9 @@ int parser(char * fileName)
 	return 0;
 }
 
+/* contentInit - initializes the struct content
+ * return - returns no value
+ */
 void contentInit(struct content * con)
 {
 	int i;
@@ -39,6 +45,9 @@ void contentInit(struct content * con)
 	}
 }
 
+/* startParse - starts the parsing steps
+* return - return 0 if error, else returns 1
+*/
 int startParse(struct content * con)
 {
 	int ans = 0, t = 0;
@@ -64,11 +73,9 @@ int startParse(struct content * con)
 	return ans;
 }
 
-void findProgram()
-{
-
-}
-
+/* beginProgramParse - starts parsing statement after the begin keyword
+ * return - returns the value of token not absorbed
+ */
 int beginProgramParse(int tok, struct content * con)
 {
 	if(tok == BEGIN)
@@ -82,6 +89,10 @@ int beginProgramParse(int tok, struct content * con)
 	return tok;
 }
 
+/*
+ * declareData - adds id names to symbol table as well as initialize data
+ * return - returns the token value for the next token not absorbed
+ */
 int declareData(struct content * con)
 {
 		con->canAddID = 1;
@@ -133,6 +144,9 @@ int declareData(struct content * con)
 		return t;
 }
 
+/* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
+ * return - returns the value of token not absorbed
+ */
 int progStatement(int tok, struct content * con)
 {
 	switch(tok)
@@ -157,6 +171,9 @@ int progStatement(int tok, struct content * con)
 	return getNextToken(con);
 }
 
+/* controlIf - absorbs the if expression in the program
+ * return - no return value
+ */
 void controlIf(int tok, struct content * con)
 {
 		if(tok == IF)
@@ -194,6 +211,9 @@ void controlIf(int tok, struct content * con)
 		}
 }
 
+/* controlWhile - absorbs the while expression in the program
+ * return - no return
+ */
 void controlWhile(int tok, struct content * con)
 {
 	if(tok == WHILE)
@@ -219,6 +239,9 @@ void controlWhile(int tok, struct content * con)
 	}
 }
 
+/* controlExpression - absorbs an expression statement in the program
+ * return - returns the value of the token not absorbed
+ */
 int controlExpression(struct content * con)
 {
 	int answer = 0, t = getNextToken(con);
@@ -234,6 +257,9 @@ int controlExpression(struct content * con)
 	return answer;
 }
 
+/* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
+ * return - returns the value of the token not absorbed
+ */
 int controlExpressionTail(int tok, struct content * con)
 {
 	int answer = 0;
@@ -259,6 +285,9 @@ int controlExpressionTail(int tok, struct content * con)
 	return answer;
 }
 
+/* controlCondition - absorbs the test conditions before a control loop
+ * return - returns 0 if false, and 1 if true
+ */
 int controlCondition(struct content * con)
 {
 	int answer = 0, t = getNextToken(con);
@@ -285,7 +314,9 @@ int controlCondition(struct content * con)
 	return answer;
 }
 
-
+/*  controlID - absorbs the expression that starts with an ID token
+ * return - no return
+ */
 void controlID(int tok, struct content * con)
 {
 		if(tok == ID)
@@ -300,6 +331,9 @@ void controlID(int tok, struct content * con)
 		}
 }
 
+/* matchOperator - returns the value of operator or comparator according to the token's group
+ * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
+ */
 int matchOperator(int t, struct content * con)
 {
 	int ans = 0;
@@ -330,7 +364,9 @@ int matchOperator(int t, struct content * con)
 	return ans;
 }
 
-
+/* matchToken - compares a token value to the value expected
+ * return - returns 0 if false and 1 if true
+ */
 int matchToken(int tokenValue, struct content * con)
 {
 	int answer = 0;

@@ -15,52 +15,6 @@
 FILE * fin;
 int tokenval = 0;
 
-int lex(struct content * con)
-{
-	printf("File is %s \n", con->fileName);
-	fin = fopen(con->fileName, "r");
-	if(!fin)
-	{
-		strcpy(con->errorMessage, "Can't open file");
-		fatalError(con);
-	}
-	int t = fgetc(fin);
-	if(t == EOF)
-	{
-	strcpy(con->errorMessage, "Empty File");
-	error(con);
-	}
-
-	printf("%c", t);
-	if((t == ' ') || (t == '/t'))
-	{
-		con->positionNumber++;//Avoid whitespace
-	}
-	else if(t == '\n')
-	{
-			con->lineNumber++;
-			con->positionNumber = 0;
-	}
-	else if(isalpha(t))
-	{
-		ungetc(t, fin);
-		getID(con);
-	}
-	else if(isdigit(t))
-	{
-		ungetc(t, fin);
-		getNumber(con);
-	}
-	else {
-		checkSpecialChar(t, con);
-		printf("  %c:%d\n", t, t);
-	}
-		t = fgetc(fin);
-	printf("\n");
-	fclose(fin);
-	return 0;
-}
-
 /* openLexFile - sets the global file pointer
  * return - no return value
  */
@@ -150,7 +104,7 @@ char * getToken(char * buffer, char t)
 int getNextToken(struct content * con)
 {
 	char temp;
-	int b = 0, ans = 0, r = 0;
+	int ans = 0, r = 0;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{

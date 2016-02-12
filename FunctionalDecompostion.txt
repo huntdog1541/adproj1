@@ -1,0 +1,333 @@
+David Hunt
+Advanced Programming Languages
+Project 1
+Functional Decompostion
+
+User-defined data structures used as parameters in the fuctions.
+	
+	parser.h
+		/* structure for reporting error messages - was not able to implement in current project
+		*/
+		
+		struct err {
+		char mess[BSIZE];
+		int lineNumber;
+		int posNumber;
+		struct err * nextMessage;
+		};
+
+		/* structure content - used to hold variables to make it easier to pass back and forth from functions
+		*  also tells the parser when it has reached the end of file
+		*/
+		struct content {
+		char fileName[BSIZE];
+		int lineNumber;
+		int positionNumber;
+		char errorMessage[BSIZE];
+		int isDone;
+		int canAddID;
+		char outputFile[BSIZE];
+		struct err * error;
+		int errorNumber;
+		};
+		
+	symbol.c 
+		/*
+		* struct entry - structure of symbol table where the string and tokenvalue are stored
+	 	*/
+	 	struct entry {
+	 		char * lexptr;
+	 		int token;
+	 		char * tokenName;
+  	 	};
+  
+  	 	/* symbol table - stores the string and tokenvalues
+  	 	*
+  	 	*/
+  	 	struct entry symtable[SYMMAX];
+  	 	
+  	 	/* keywords - stores reserved keywords
+   	  	*
+  	 	*/
+  	 	struct entry keywords[] = {
+       "program", PROGRAM, "PROGRAM",
+       "begin", BEGIN, "BEGIN",
+       "end", END, "END",
+       "done", DONE, "DONE",
+       "if", IF, "IF",
+       "else", ELSE, "ELSE",
+       "end_if", END_IF, "END_IF",
+       "while", WHILE, "WHILE",
+       "do", DO, "DO",
+       "end_while", END_WHILE, "END_WHILE",
+       "for", FOR, "FOR",
+       "(", LPARENTSIS, "LPARENTSIS",
+        ")", RPARENTSIS, "RPARENTSIS",
+        "[", LBRACKET, "LBRACKET",
+        "]", RBRACKET, "RBRACKET",
+        ";", SEMICOLON, "SEMICOLON",
+          ".", PERIOD, "PERIOD",
+        ",", COMMA, "COMMA",
+        "_", UNDERSCORE, "UNDERSCORE",
+        "//", SINGLECOMMENT, "SINGLECOMMENT",
+        "/*", STARTMULTIPLECOMMENT, "STARTMULTIPLECOMMENT",
+        "*/", ENDMULTIPLECOMMENT,"ENDMULTIPLECOMMENT",
+        "=", ASSIGNMENT, "ASSIGNMENT",
+        "==", EQUALITY, "EQUALITY",
+        "+", ADDITION, "ADDITION",
+        "-", SUBTRACTION, "SUBTRACTION",
+        "*", MULTIPLICATION, "MULTIPLICATION",
+        "/", DIVISION, "DIVISION",
+        "%", MODUS, "MODUS",
+        ">", GREATERTHAN, "GREATERTHAN",
+        "<", LESSERTHAN, "LESSERTHAN",
+        ">=", GREATERTHANANDEQUAL, "GREATERTHANANDEQUAL",
+        "<=", LESSERTHANANDEQUAL, "LESSERTHANANDEQUAL",
+        "<=>", STRINGEQUAL, "STRINGEQUAL",
+       "int", INT, "INT",
+       "float", FLOAT, "FLOAT",
+       "char", CHAR, "CHAR",
+       "string", STRING, "STRING",
+       0, 0, 0
+      };
+
+  lexer.c
+      int tokenval //a global variable that stores the token value
+ 
+ Files and Functions in the Program 
+ 
+ 
+  symbol.c
+  /* symbol.c - holds the symbol table. Allows the lookup of reserved keywords and add ID names
+  *
+  */
+ 
+      /* init - initializes the symbol table
+      * return - returns no value
+      */
+      void init();
+      
+      /* lookup - given a string to lookup in the symbol table
+       * return - value of the location of the keyword in the symbol table
+       */
+      int lookup(char s[]);
+      
+      /* insert - inserts a value into the symbol table
+       * return - 
+       */
+      int insert(char s[], int tok, char tN[]);
+      
+      /* getLexeme - gets the keyword from the table given a position in the table
+       * return - returns the string taken from the symbol table
+       */
+      char * getLexeme(int pos);
+      
+      /* getTokenType - gets the token value from the table given a position in the symbol table
+       * return - returns the token value
+       */
+      int getTokenType(int pos);
+      
+      /* printSymbol - prints all the content from the symbol table - a ultilty function
+       * return - returns no value
+       */
+      void printSymbol();
+  
+  error.c
+  /* error.c - handles error messaging, stores error line number and position in order to report location of bugs
+  * 
+  */
+  
+        /* error - adds the message, line number, and line position
+         * return - no return value
+         */
+        void error(struct content * con);
+        
+        /*
+         *  Fatal Error is an error function that exits after printing error message
+         *  return - no value returned
+         */
+        void fatalError(struct content * con);
+        
+        /* addError - add error messages to the content;
+         * return - no value returned
+         */
+        void addError(struct content * con);
+        
+        /* findErrorMessage - finds the last error message
+         * return - returns error message structure
+         */
+        struct err * findErrorMessage(struct content * con);
+        
+        /* printAllErrors - goes through the list of errors and prints them out one by one
+         * return - no value returned
+         */
+        void printAllErrors(struct content * con);
+        
+        /* printSingleError - prints out a single error message as it goes through the list
+         * return - no value returned
+         */
+        void printSingleError(struct err * er);
+        
+        /* insertError - inserts error message in to error list
+         * return - no value returned
+         */
+        void insertError(char * str, struct content * con);
+        
+  
+  lexer.c 
+  /* lexer.c - contains the lexical analyser functions and returns the token values back to the parser
+   
+  */
+
+        /* getID - gets the ID name from the file.
+       * return - no return value, sets the tokenval integer.
+       */
+      void getID(struct content * con);
+      
+      /* getToken -
+       *
+       */
+      char * getToken(char * buffer, char t);
+      
+      /* isValidID - checks to if valid character for ID
+       * return - 0 if false, otherwise 1
+       */
+      int isValidID(char t);
+      
+      /* getNextToken - gets the next token
+       * return - returns the token value
+       */
+      int getNextToken(struct content * con);
+      
+      /* checkSpecialChar -  check special characters that are not alphabetical or digits
+       * return - returns the token value for the special sequence found
+       */
+      int checkSpecialChar(char temp, struct content * con);
+      
+      /* getNumber - gets a constant value from the program
+       * return - no return value, but does set the tokenval
+       */
+      void getNumber(struct content * con);
+      
+      /* lookahead - gets a the next character value but returns the character to the file
+       * return - returns the next value from the file
+       */
+      char lookahead();
+      
+      /* absorbSpace - runs a loop to absorb all spaces between words
+       * return - no return value
+       */
+      void absorbSpace(struct content * con);
+      
+      /* printAllString - prints out the entire content of a string, even space characters
+       * return - no return value
+       */
+      void printAllString(char * string);
+      
+      /* openLexFile - sets the global file pointer
+       * return - no return value
+       */
+      void openLexFile(struct content * con);
+      
+      /* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
+       * return - no return value
+       */
+      int absorbMultComment(struct content * con);
+      
+      /* checkStartMultipleComment - checks to see if the start characters are equal to start multiple line sequence
+       * return - returns 0 - if error and 1 - if true
+       */
+      int checkStartMultipleComment(struct content * con);
+      
+      /* checkEndMultipleComment - checks to see if the end characters are equal end multiple comment sequence
+       * return - returns 0 - if error and 1 - if true
+       */
+      int checkEndMultipleComment(char temp, struct content * con);
+        
+  main.c 
+  /* main.c - contains the main function that calls the parser and passes in the file name
+			  only contains int main function
+  */
+  
+  
+  parser.c 
+  /* parser.c - parser functions - gets the token value from the lexical analyser and parses accordingly
+  
+  */
+	
+      	/* parser - parser takes the steps to initialize steps
+       * return - return 0 if error, else returns 1
+       */
+      int parser(char * fileName);
+      
+      /* contentInit - initializes the struct content
+       * return - returns no value
+       */
+      void contentInit(struct content * con);
+      
+      /* startParse - starts the parsing steps
+      * return - return 0 if error, else returns 1
+      */
+      int startParse();
+      
+      
+      /*
+       * declareData - adds id names to symbol table as well as initialize data
+       * return - returns the token value for the next token not absorbed
+       */
+      int declareData(struct content * con);
+      
+      /* beginProgramParse - starts parsing statement after the begin keyword
+       * return - returns the value of token not absorbed
+       */
+      int beginProgramParse(int tok, struct content * con);
+      
+      /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
+       * return - returns the value of token not absorbed
+       */
+      int progStatement(int tok, struct content * con);
+      
+      /* controlIf - absorbs the if expression in the program
+       * return - no return value
+       */
+      void controlIf(int tok, struct content * con);
+      
+      /* controlWhile - absorbs the while expression in the program
+       * return - no return
+       */
+      void controlWhile(int tok, struct content * con);
+      
+      /* controlExpression - absorbs an expression statement in the program
+       * return - returns the value of the token not absorbed
+       */
+      int controlExpression(struct content * con);
+      
+      /* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
+       * return - returns the value of the token not absorbed
+       */
+      int controlExpressionTail(int tok, struct content * con);
+      
+      /* controlCondition - absorbs the test conditions before a control loop
+       * return - returns 0 if false, and 1 if true
+       */
+      int controlCondition(struct content * con);
+      
+      /*  controlID - absorbs the expression that starts with an ID token
+       * return - no return
+       */
+      void controlID(int tok, struct content * con);
+      
+      /* matchOperator - returns the value of operator or comparator according to the token's group
+       * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
+       */
+      int matchOperator(int t, struct content * con);
+      
+      /* matchToken - compares a token value to the value expected
+       * return - returns 0 if false and 1 if true
+       */
+      int matchToken(int tokenValue, struct content * con);
+      
+	global.h
+	/* global.h - defines token values for the keywords as well as additional words to help with parsing tokens
+	* 
+	*/

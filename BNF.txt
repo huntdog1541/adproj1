@@ -1,0 +1,23 @@
+<program>::= "program" <decls> "begin" <stmtlist> "end"
+<decls>::= <declaration> ";" <decls> | <declaration> ";" | empty
+<declaration>::= <data-type> <id> "=" <num>
+<data-type>::= "int" | "char" | "string" | "float"
+<stmtlist>::= <stmt> ";" <stmtlist> | empty
+<stmt>::= <if-stmt> | <if-stmt> <else-stmt> | <while-stmt>
+<if-stmt>::= "if" <exp> "{" <stmtlist> "}"
+<else-stmt>::= "else" <stmtlist> "end" | empty
+<while-stmt>::= "while" <exp> "do" <stmtlist> "end"
+<expression>::= <operand> <exp_tail>
+<exp_tail>::= <op> <operand> <exp_tail> | empty
+<operand>::= <id> <num> | empty
+<op>::= "+" | "-" | "*" | "/"
+<comparator>::= "==" | ">" | "<" | "<=" | ">=" | "!="
+<id>::= <letter><id_tail>
+<id_tail>::= <alnum> <end_seq> | empty
+<end_seq>::= <alnum> <end_seq> | <underscore_seq> <end_seq> | empty
+<underscore_seq>::= "_" <alnum>
+<alnum>::= <letter><digit>
+<num>::= <digit><digit> | <digit>
+<letter>::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" |
+			"n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+<digit>::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"

@@ -14,10 +14,6 @@
 #ifndef LEXER_H_
 #define LEXER_H_
 
-/*
- *
- */
-int lex(struct content * con);
 
 /* getID - gets the ID name from the file.
  * return - no return value, sets the tokenval integer.
@@ -29,8 +25,8 @@ void getID(struct content * con);
  */
 char * getToken(char * buffer, char t);
 
-/* isValidID -
- *
+/* isValidID - checks to if valid character for ID
+ * return - 0 if false, otherwise 1
  */
 int isValidID(char t);
 

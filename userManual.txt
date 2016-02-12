@@ -1,0 +1,41 @@
+David Hunt
+Advanced Programming Languages
+Project 1
+User’s Manual
+
+Setup and Compilation
+1. Download and unzip the submitted zip file from eLearning on a Linux box in the multi-platform lab.
+2. Files placed in the zip file include but not limited to:
+•	src/parser.c
+•	src/Lexer.c
+•	src/Main.c
+•	src/Error.c
+•	src/symbol.c
+•	src/global.h
+•	testfiles/test1.txt
+•	testfiles/test2.txt
+•	testfiles/test3.txt
+•	testfiles/test4.txt
+•	testfiles/illegaltest1.txt
+•	testfiles/illegaltest2.txt
+•	testfiles/illegaltest3.txt
+•	testfiles/illegaltest4.txt
+
+3. Environment: Runs on a linux system with GNU, preferably ran in the mult-platform lab.
+4. Compiling: It comes with a makefile. After unzipping the file, “cd” into the new folder.  From that location type in make.  After a success compilation you are ready to run the files.
+Running the program:  In the same directory in which you ran the make command, type “make legal” to run 4 test files of legal grammar.  To run the illegal test files type “make illegal”.  Due to the fact that after an error has occurred the program shutsdown, you may not see the other illegal tests run. In that case you will have to run each test adding a number at the end of illegal like “make illegal1”, “make illegal2”, “illegal3”, “make illegal4”.  I am aware of this problem and I am working to fix it.
+
+Output: All output goes to the console.
+	./Parser testfiles/test1.txt
+	Running parser for file name testfiles/test1.txt
+	Parser ran
+	File Name: testfiles/test1.txt
+	Successful Parse
+
+In case of an error you will see this:
+
+	./Parser testfiles/illegaltest1.txt
+	Running parser for file name testfiles/illegaltest1.txt
+	Parser ran
+	File Name: testfiles/illegaltest1.txt
+	Error at line 10 position 2 :Invalid End of While loop

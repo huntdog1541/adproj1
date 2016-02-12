@@ -8,26 +8,39 @@
 #include <stdlib.h>
 #include <string.h>
 #include "error.h"
-#include "parser.h" 
+#include "parser.h"
 
+/* error - adds the message, line number, and line position
+ * return - no return value
+ */
  void error(struct content * con)
  {
    fprintf(stderr, "Error at line %d position %d :%s \n", con->lineNumber, con->positionNumber, con->errorMessage);
    exit(1);
  }
 
+ /*
+  *  Fatal Error is an error function that exits after printing error message
+  *  return - no value returned
+  */
  void fatalError(struct content * con)
  {
 	 fprintf(stderr, "Error: %s\n Exiting\n", con->errorMessage);
 	 exit(1);
  }
 
+ /* insertError - inserts error message in to error list
+  * return - no value returned
+  */
  void insertError(char * str, struct content * con)
  {
 	 sprintf(con->errorMessage, "Error at line %d position %d : %s \n", con->lineNumber, con->positionNumber, con->errorMessage);
 	 addError(con);
  }
 
+ /* addError - add error messages to the content;
+  * return - no value returned
+  */
  void addError(struct content * con)
  {
  	struct err * temp = findErrorMessage(con);
@@ -40,6 +53,9 @@
  	con->errorNumber++;
  }
 
+ /* findErrorMessage - finds the last error message
+  * return - returns error message structure
+  */
 struct err * findErrorMessage(struct content * con)
 {
 	struct err * temp = con->error;
@@ -50,6 +66,9 @@ struct err * findErrorMessage(struct content * con)
 	return temp;
 }
 
+/* printAllErrors - goes through the list of errors and prints them out one by one
+ * return - no value returned
+ */
 void printAllErrors(struct content * con)
 {
 	if(con->errorNumber == 0)
@@ -61,6 +80,9 @@ void printAllErrors(struct content * con)
 		temp = temp->nextMessage;
 }
 
+/* printSingleError - prints out a single error message as it goes through the list
+ * return - no value returned
+ */
 void printSingleError(struct err * er)
 {
 	fprintf(stderr, "%s\n", er->mess);
