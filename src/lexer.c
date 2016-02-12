@@ -117,8 +117,6 @@ void getID(struct content * con)
 			ungetc(temp, fin);  //Ungets the EOF so to avoid error when calling getc again after end of file
 			con->isDone = 1;
 		}
-		printf("got alpha[%s]\n", lexbuf);
-		//printAllString(lexbuf);
 		p = lookup(lexbuf);
 		if((p == NOT_FOUND) && (con->canAddID == 1))
 			p = insert(lexbuf, ID, "ID");
@@ -131,7 +129,7 @@ void getID(struct content * con)
 			}
 		}
 		tokenval = getTokenType(p);
-		printf("Token Value %d\n", tokenval);
+		//printf("Token Value %d\n", tokenval);
 }
 
 

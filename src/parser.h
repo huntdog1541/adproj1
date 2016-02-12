@@ -52,6 +52,29 @@ void findProgram();
 
 int declareData(struct content * con);
 
-void absorbMultLineComment(struct content * con);
+int beginProgramParse(int tok, struct content * con);
+
+int declareData(struct content * con);
+
+int progStatement(int tok, struct content * con);
+
+void controlIf(int tok, struct content * con);
+
+void controlWhile(int tok, struct content * con);
+
+int controlExpression(struct content * con);
+
+int controlExpressionTail(int tok, struct content * con);
+
+int controlCondition(struct content * con);
+
+
+void controlID(int tok, struct content * con);
+
+int matchOperator(int t, struct content * con);
+
+void startProgram(struct content * con);
+
+int matchToken(int tokenValue, struct content * con);
 
 #endif /* PARSER_H_ */

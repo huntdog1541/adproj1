@@ -74,6 +74,9 @@ int lastentry = 0;
    0, 0, 0
  };
 
+ /* init - initializes the symbol table
+  * return - returns no value
+  */
  void init()
  {
    struct entry *p;
@@ -81,6 +84,9 @@ int lastentry = 0;
       insert(p->lexptr, p->token, p->tokenName);
  }
 
+ /* lookup - given a string to lookup in the symbol table
+  * return - value of the location of the keyword in the symbol table
+  */
  int lookup(char s[])
  {
    int p;
@@ -91,6 +97,9 @@ int lastentry = 0;
     return NOT_FOUND;
  }
 
+ /* insert - inserts a value into the symbol table
+  * return -
+  */
  int insert(char s[], int tok, char tN[])
  {
    int len, tokLen;
@@ -113,19 +122,28 @@ int lastentry = 0;
    return lastentry;
  }
 
+ /* getLexeme - gets the keyword from the table given a position in the table
+  * return - returns the string taken from the symbol table
+  */
 char * getLexeme(int pos)
 {
   return symtable[pos].lexptr;
 }
 
+/* getTokenType - gets the token value from the table given a position in the symbol table
+ * return - returns the token value
+ */
 int getTokenType(int pos)
 {
   return symtable[pos].token;
 }
 
+/* printSymbol - prints all the content from the symbol table - a ultilty function
+ * return - returns no value
+ */
 void printSymbol()
 {
-    struct entry *p;
-    for(p = keywords; p->token; p++)
-      printf("KEYWORD: %s and value %d and KEYWORD Name: %s\n", p->lexptr, p->token, p->tokenName);
+	int i = lastentry;
+    for(; i > 0; i--)
+      printf("KEYWORD: %s and value %d and KEYWORD Name: %s\n", symtable[i].lexptr, symtable[i].token, symtable[i].tokenName);
 }

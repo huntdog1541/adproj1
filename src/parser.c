@@ -18,11 +18,8 @@ int parser(char * fileName)
 	puts("Parser ran");
 	struct content con;
 	contentInit(&con);
-	//printSymbol();
 	strcpy(con.fileName, fileName);
-	//lex(&con);
 	startParse();
-	//printSymbol();
 	printf("Successful Parse\n");
 	return 0;
 }
@@ -153,7 +150,8 @@ int progStatement(int tok, struct content * con)
 					con->isDone = 1;
 				break;
 		default:
-			error("Could not find valid Statement\n");
+			strcpy(con->errorMessage, "Could not find valid statement\n");
+			error(con);
 			break;
 	}
 	return getNextToken(con);
@@ -226,22 +224,37 @@ int controlExpression(struct content * con)
 	int answer = 0, t = getNextToken(con);
 	if((t == ID) || (t == NUMERICAL_CONSTANT))
 	{
-		if(matchOperator(con) == OPERATOR)
+		t = getNextToken(con);
+		if(!controlExpressionTail(t, con))
 		{
-			t = getNextToken(con);
-			if(!(t == ID) && !(t == NUMERICAL_CONSTANT))
-			{
-				strcpy(con->errorMessage, "Didn't find ending id or number\n");
-				error(con);
-			}
-			matchToken(SEMICOLON, con);
-			answer = 1;
-		}
-		else
-		{
-			strcpy(con->errorMessage, "Didn't find operator\n");
+			strcpy(con->errorMessage, "Error handling expression tail\n");
 			error(con);
 		}
+	}
+	return answer;
+}
+
+int controlExpressionTail(int tok, struct content * con)
+{
+	int answer = 0;
+	if(matchOperator(tok, con) == OPERATOR)
+	{
+		tok = getNextToken(con);
+		if(!(tok == ID) && !(tok == NUMERICAL_CONSTANT))
+		{
+			strcpy(con->errorMessage, "Didn't find second id or number\n");
+			error(con);
+		}
+		tok = getNextToken(con);
+		if(tok == SEMICOLON)
+				answer = 1;
+		else
+				answer = controlExpressionTail(tok, con);
+	}
+	else
+	{
+		strcpy(con->errorMessage, "Error with Expression tail\n");
+		error(con);
 	}
 	return answer;
 }
@@ -251,7 +264,8 @@ int controlCondition(struct content * con)
 	int answer = 0, t = getNextToken(con);
 	if((t == ID) || (t == NUMERICAL_CONSTANT))
 	{
-		if(matchOperator(con) == COMPARATOR)
+		t = getNextToken(con);
+		if(matchOperator(t, con) == COMPARATOR)
 		{
 			t = getNextToken(con);
 			if(!(t == ID) && !(t == NUMERICAL_CONSTANT))
@@ -286,9 +300,9 @@ void controlID(int tok, struct content * con)
 		}
 }
 
-int matchOperator(struct content * con)
+int matchOperator(int t, struct content * con)
 {
-	int ans = 0, t = getNextToken(con);
+	int ans = 0;
 	switch(t)
 	{
 		case ADDITION:
@@ -305,17 +319,17 @@ int matchOperator(struct content * con)
 		case STRINGEQUAL:
 				ans = COMPARATOR;
 				break;
+		case SEMICOLON:
+				ans = SEMICOLON;
+				break;
 		default:
+				strcpy(con->errorMessage, "Couldn't find Operator or Comparator\n");
+				error(con);
 				break;
 	}
 	return ans;
 }
 
-void startProgram(struct content * con)
-{
-		con->canAddID = 0;
-		int t = getNextToken(con);
-}
 
 int matchToken(int tokenValue, struct content * con)
 {
@@ -328,4 +342,5 @@ int matchToken(int tokenValue, struct content * con)
 		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, temp);
 		error(con);
 	}
+	return answer;
 }

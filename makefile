@@ -11,10 +11,10 @@ ERROR = src/error
 
 
 
-$(TARGET): Main.o parser.o lexer.o error.o symbol.o
-	$(CC) -o $(TARGET) Main.o parser.o lexer.o error.o symbol.o
+$(TARGET): main.o parser.o lexer.o error.o symbol.o
+	$(CC) -o $(TARGET) main.o parser.o lexer.o error.o symbol.o
 
-Main.o: $(MAIN).c $(GLOBAL)
+main.o: $(MAIN).c $(GLOBAL)
 	$(CC) $(CFLAGS) $(MAIN).c $(GLOBAL)
 
 parser.o: $(PARSER).c $(PARSER).h
@@ -28,6 +28,24 @@ error.o: $(ERROR).c $(ERROR).h
 
 symbol.o: $(SYMBOL).c $(SYMBOL).h
 	$(CC) $(CFLAGS) $(SYMBOL).c $(SYMBOL).h
+
+legal:
+	./Parser testfiles/test1.txt
+	./Parser testfiles/test2.txt
+	./Parser testfiles/test3.txt
+	./Parser testfiles/test4.txt
+
+illegal1:
+	./Parser testfiles/illegaltest1.txt
+
+illegal2:
+	./Parser testfiles/illegaltest2.txt
+
+illegal3:
+	./Parser testfiles/illegaltest3.txt
+
+illegal4:
+	./Parser testfiles/illegaltest4.txt
 
 .PHONY : clean
 
