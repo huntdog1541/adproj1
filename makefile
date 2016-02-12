@@ -9,8 +9,6 @@ GLOBAL = src/global.h
 SYMBOL = src/symbol
 ERROR = src/error
 
-
-
 $(TARGET): main.o parser.o lexer.o error.o symbol.o
 	$(CC) -o $(TARGET) main.o parser.o lexer.o error.o symbol.o
 
@@ -28,6 +26,8 @@ error.o: $(ERROR).c $(ERROR).h
 
 symbol.o: $(SYMBOL).c $(SYMBOL).h
 	$(CC) $(CFLAGS) $(SYMBOL).c $(SYMBOL).h
+
+illegal: illegal1 illegal2 illegal3 illegal4
 
 legal:
 	./Parser testfiles/test1.txt
@@ -50,4 +50,4 @@ illegal4:
 .PHONY : clean
 
 clean :
-			-rm -f *.o *.gch Parser.exe
+			-rm -f *.o *.gch Parser* src/*.gch
