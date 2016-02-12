@@ -1,10 +1,6 @@
 program
-int a = 6, b;
+int a_ = 6, b;
 int c = 7;
 begin
-while a < b; do
-while b < c; do
- b = a + c;
-end_while
 // Comment
 end

@@ -1,6 +1,6 @@
 program
-int a_ = 6, b;
-int c = 7;
+int a = 6;
 begin
 // Comment
+d = 86 + a;
 end
