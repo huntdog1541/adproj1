@@ -104,7 +104,7 @@ char * getToken(char * buffer, char t)
 int getNextToken(struct content * con)
 {
 	char temp;
-	int ans = 0, r = 0;
+	int r = 0;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{
@@ -143,7 +143,7 @@ int getNextToken(struct content * con)
 void absorbSpace(struct content * con)
 {
 	char temp = fgetc(fin);
-	while((temp == ' ') || (temp == '/t'))
+	while((temp == ' ') || (temp == '\t'))
 	{
 		con->positionNumber++;
 		temp = fgetc(fin);
@@ -179,7 +179,12 @@ void getNumber(struct content * con)
 	}
 	ungetc(t, fin);
 	con->positionNumber--;
-	int value = atoi(buffer);
+	atoi(buffer);
+	/*int value = atoi(buffer);
+	if(value )
+	{
+		tokenval = NUMERICAL_CONSTANT;
+	}*/
 	tokenval = NUMERICAL_CONSTANT;
 }
 
@@ -188,14 +193,13 @@ void getNumber(struct content * con)
  */
 int checkSpecialChar(char temp, struct content * con)
 {
-	char t;
 	int ans = 0, er = 0;
 	switch(temp)
 	{
 		case '=':
 			if((lookahead() == '='))
 			{
-				t = fgetc(fin);
+				fgetc(fin);
 				con->positionNumber++;
 				ans = EQUALITY;
 			}
@@ -205,7 +209,7 @@ int checkSpecialChar(char temp, struct content * con)
 		case '/':
 			if((lookahead() == '/'))
 			{
-				t = fgetc(fin);
+				fgetc(fin);
 				con->positionNumber++;
 				absorbSingleLineComment(con);
 				ans = getNextToken(con);
@@ -235,7 +239,7 @@ int checkSpecialChar(char temp, struct content * con)
 		case '>':
 			if((lookahead() == '='))
 			{
-				t = fgetc(fin);
+				fgetc(fin);
 				con->positionNumber++;
 				ans = GREATERTHANANDEQUAL;
 			}
@@ -245,11 +249,11 @@ int checkSpecialChar(char temp, struct content * con)
 		case '<':
 			if((lookahead() == '='))
 			{
-				t = fgetc(fin);
+				fgetc(fin);
 				con->positionNumber++;
 				if((lookahead() == '>'))
 				{
-					t = fgetc(fin);
+					fgetc(fin);
 					con->positionNumber++;
 					ans = STRINGEQUAL;
 				}

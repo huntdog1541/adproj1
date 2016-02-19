@@ -65,6 +65,8 @@ void printAllString(char * string);
  */
 void openLexFile(struct content * con);
 
+void absorbSingleLineComment(struct content * con);
+
 /* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
  * return - no return value
  */

@@ -7,11 +7,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "global.h"
 #include "parser.h"
 #include "lexer.h"
-#include "global.h"
 #include "error.h"
 #include "symbol.h"
+
+#define ELSE 305
+#define END_WHILE 309
+#define END_IF 306
+#define OPERATOR 412
+#define COMPARATOR 413
+
 
 /* parser - parser takes the steps to initialize steps
  * return - return 0 if error, else returns 1

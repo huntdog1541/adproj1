@@ -39,46 +39,46 @@ int lastentry = 0;
 
 
  struct entry keywords[] = {
-   "program", PROGRAM, "PROGRAM",
-   "begin", BEGIN, "BEGIN",
-   "end", END, "END",
-   "done", DONE, "DONE",
-   "if", IF, "IF",
-   "else", ELSE, "ELSE",
-   "end_if", END_IF, "END_IF",
-   "while", WHILE, "WHILE",
-   "do", DO, "DO",
-   "end_while", END_WHILE, "END_WHILE",
-   "for", FOR, "FOR",
-   "(", LPARENTSIS, "LPARENTSIS",
-    ")", RPARENTSIS, "RPARENTSIS",
-    "[", LBRACKET, "LBRACKET",
-    "]", RBRACKET, "RBRACKET",
-    ";", SEMICOLON, "SEMICOLON",
-    ".", PERIOD, "PERIOD",
-    ",", COMMA, "COMMA",
-    "_", UNDERSCORE, "UNDERSCORE",
-    "//", SINGLECOMMENT, "SINGLECOMMENT",
-    "/*", STARTMULTIPLECOMMENT, "STARTMULTIPLECOMMENT",
-    "*/", ENDMULTIPLECOMMENT,"ENDMULTIPLECOMMENT",
-    "=", ASSIGNMENT, "ASSIGNMENT",
-    "==", EQUALITY, "EQUALITY",
-    "+", ADDITION, "ADDITION",
-    "-", SUBTRACTION, "SUBTRACTION",
-    "*", MULTIPLICATION, "MULTIPLICATION",
-    "/", DIVISION, "DIVISION",
-    "%", MODUS, "MODUS",
-    ">", GREATERTHAN, "GREATERTHAN",
-    "<", LESSERTHAN, "LESSERTHAN",
-    ">=", GREATERTHANANDEQUAL, "GREATERTHANANDEQUAL",
-    "<=", LESSERTHANANDEQUAL, "LESSERTHANANDEQUAL",
-    "<=>", STRINGEQUAL, "STRINGEQUAL",
-   "int", INT, "INT",
-   "float", FLOAT, "FLOAT",
-   "char", CHAR, "CHAR",
-   "string", STRING, "STRING",
-   0, 0, 0
- };
+      {"program", PROGRAM, "PROGRAM",},\
+      {"begin", BEGIN, "BEGIN",},\
+      {"end", END, "END", },\
+      {"done", DONE, "DONE", },\
+      {"if", IF, "IF", },\
+      {"else", ELSE, "ELSE", },\
+      {"end_if", END_IF, "END_IF", },\
+      {"while", WHILE, "WHILE", },\
+      {"do", DO, "DO", },\
+      {"end_while", END_WHILE, "END_WHILE", },\
+      {"for", FOR, "FOR", },\
+      {"(", LPARENTSIS, "LPARENTSIS", },\
+      {")", RPARENTSIS, "RPARENTSIS", },\
+      {"[", LBRACKET, "LBRACKET", },\
+      {"]", RBRACKET, "RBRACKET", },\
+      {";", SEMICOLON, "SEMICOLON", },\
+      {".", PERIOD, "PERIOD", },\
+      {",", COMMA, "COMMA", },\
+      {"_", UNDERSCORE, "UNDERSCORE", },\
+      {"//", SINGLECOMMENT, "SINGLECOMMENT", },\
+      {"/*", STARTMULTIPLECOMMENT, "STARTMULTIPLECOMMENT", },\
+      {"*/", ENDMULTIPLECOMMENT,"ENDMULTIPLECOMMENT", },\
+      {"=", ASSIGNMENT, "ASSIGNMENT", },\
+      {"==", EQUALITY, "EQUALITY", },\
+      {"+", ADDITION, "ADDITION", },\
+      {"-", SUBTRACTION, "SUBTRACTION", },\
+      {"*", MULTIPLICATION, "MULTIPLICATION", },\
+      {"/", DIVISION, "DIVISION", },\
+      {"%", MODUS, "MODUS", },\
+      {">", GREATERTHAN, "GREATERTHAN", },\
+      {"<", LESSERTHAN, "LESSERTHAN", },\
+      {">=", GREATERTHANANDEQUAL, "GREATERTHANANDEQUAL", },\
+      {"<=", LESSERTHANANDEQUAL, "LESSERTHANANDEQUAL", },\
+      {"<=>", STRINGEQUAL, "STRINGEQUAL", },\
+      {"int", INT, "INT", },\
+      {"float", FLOAT, "FLOAT", },\
+      {"char", CHAR, "CHAR", },\
+      {"string", STRING, "STRING", },\
+      {0, 0, 0}
+};
 
  /* init - initializes the symbol table
   * return - returns no value
@@ -112,11 +112,23 @@ int lastentry = 0;
    len = strlen(s);
    tokLen = strlen(tN);
    if(lastentry + 1 >= SYMMAX)
-      error("symbol table full");
+   {
+	   struct content con;
+	   strcpy(con.errorMessage, "symbol table full\n");
+	   error(&con);
+   }
    if(lastchar + len + 1 >= STRMAX)
-      error("lexeme array full");
+   {
+   	  struct content con;
+   	  strcpy(con.errorMessage, "lexeme array full\n");
+      error(&con);
+   }
    if(tokenChar + tokLen + 1 >= STRMAX)
-      error("token name array full");
+   {
+	   struct content con;
+	   strcpy(con.errorMessage, "token name array full\n");
+     error(&con);
+   }
    lastentry = lastentry + 1;
    symtable[lastentry].token = tok;
    symtable[lastentry].lexptr = &lexemes[lastchar + 1];
