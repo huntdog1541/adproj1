@@ -13,7 +13,7 @@
 #include "error.h"
 
 FILE * fin;
-struct tokenType tokenval;
+
 
 /* openLexFile - sets the global file pointer
  * return - no return value
@@ -72,7 +72,6 @@ void getID(struct content * con)
 			con->isDone = 1;
 		}
 		p = lookup(lexbuf);
-		strcpy(tokenval.buffer, lexbuf);
 		if((p == NOT_FOUND) && (con->canAddID == 1))
 			p = insert(lexbuf, ID, "ID");
 		else if(p == NOT_FOUND)
@@ -83,7 +82,8 @@ void getID(struct content * con)
 				error(con);
 			}
 		}
-		tokenval.tokenNumber = getTokenType(p);
+		p = getTokenType(p);
+		setTokenValue(lexbuf, p);
 		//printf("Token Value %d\n", tokenval);
 }
 
@@ -102,15 +102,14 @@ char * getToken(char * buffer, char t)
 /* getNextToken - gets the next token
  * return - returns the token value
  */
-int getNextToken(struct content * con)
+void getNextToken(struct content * con)
 {
 	char temp;
-	int r = 0;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{
 		con->isDone = 1;
-		return 0;
+		return;
 	}
 	else if((temp == ' ') || (temp == '\t'))
 	{
@@ -126,16 +125,13 @@ int getNextToken(struct content * con)
 	{
 		ungetc(temp, fin);
 		getID(con);
-		return tokenval;
 	}
 	else if(isdigit(temp))
 	{
 		ungetc(temp, fin);
 		getNumber(con);
-		return tokenval;
 	}
-	r = checkSpecialChar(temp, con);
-	return r;
+	checkSpecialChar(temp, con);
 }
 
 /* absorbSpace - runs a loop to absorb all spaces between words
@@ -186,15 +182,14 @@ void getNumber(struct content * con)
 	{
 		tokenval = NUMERICAL_CONSTANT;
 	}*/
-	tokenval = NUMERICAL_CONSTANT;
+	setTokenValue(buffer, NUMERICAL_CONSTANT);
 }
 
 /* checkSpecialChar -  check special characters that are not alphabetical or digits
  * return - returns the token value for the special sequence found
  */
-int checkSpecialChar(char temp, struct content * con)
+void checkSpecialChar(char temp, struct content * con)
 {
-	int ans = 0, er = 0;
 	switch(temp)
 	{
 		case '=':
@@ -202,10 +197,10 @@ int checkSpecialChar(char temp, struct content * con)
 			{
 				fgetc(fin);
 				con->positionNumber++;
-				ans = EQUALITY;
+				setTokenValue("==", EQUALITY);
 			}
 			else
-				ans = ASSIGNMENT;
+				setTokenValue("=", ASSIGNMENT);
 			break;
 		case '/':
 			if((lookahead() == '/'))
@@ -213,39 +208,32 @@ int checkSpecialChar(char temp, struct content * con)
 				fgetc(fin);
 				con->positionNumber++;
 				absorbSingleLineComment(con);
-				ans = getNextToken(con);
+				getNextToken(con);
 			}
 			else if((lookahead() == '*'))
 			{
 				ungetc(temp, fin);
 				con->positionNumber--;
-				er = absorbMultComment(con);
-				if(er == 0)
-					ans = STARTMULTIPLECOMMENT;
-				else
-				{
-					strcpy(con->errorMessage, "Multiple Line comment Error");
-					error(con);
-				}
+				absorbMultComment(con);
 			}
 			else
-				ans = DIVISION;
+				setTokenValue("/", DIVISION);
 			break;
 		case '+':
-				ans = ADDITION;
+				setTokenValue("+", ADDITION);
 				break;
 		case '-':
-				ans = SUBTRACTION;
+				setTokenValue("-", SUBTRACTION);
 				break;
 		case '>':
 			if((lookahead() == '='))
 			{
 				fgetc(fin);
 				con->positionNumber++;
-				ans = GREATERTHANANDEQUAL;
+				setTokenValue(">=", GREATERTHANANDEQUAL);
 			}
 			else
-				ans = GREATERTHAN;
+				setTokenValue(">", GREATERTHAN);
 			break;
 		case '<':
 			if((lookahead() == '='))
@@ -256,22 +244,22 @@ int checkSpecialChar(char temp, struct content * con)
 				{
 					fgetc(fin);
 					con->positionNumber++;
-					ans = STRINGEQUAL;
+					setTokenValue("<=>" ,STRINGEQUAL);
 				}
-				ans = LESSERTHANANDEQUAL;
+				else
+					setTokenValue("<=" ,LESSERTHANANDEQUAL);
 			}
 			else
-				ans = LESSERTHAN;
+				setTokenValue("<" ,LESSERTHAN);
 			break;
 		case ';' :
-			ans = SEMICOLON;
+			setTokenValue(";", SEMICOLON);
 			break;
 		case ',' :
-			ans = COMMA;
+			setTokenValue(",", COMMA);
 			break;
 		default: break;
 	}
-	return ans;
 }
 
 /* printAllString - prints out the entire content of a string, even space characters
@@ -289,9 +277,8 @@ void printAllString(char * string)
 /* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
  * return - no return value
  */
-int absorbMultComment(struct content * con)
+void absorbMultComment(struct content * con)
 {
-	int answer = 1;
 	char temp;
 	if(checkStartMultipleComment(con))
 	{
@@ -300,12 +287,20 @@ int absorbMultComment(struct content * con)
 		while(checkEndMultipleComment(temp, con))
 		{
 			temp = fgetc(fin);
-			con->positionNumber++;
+			if(temp == '\0')
+			{
+				con->lineNumber++;
+				con->positionNumber = 0;
+			}
+			else
+				con->positionNumber++;
 		}
 	}
 	else
-		answer = 0;
-	return answer;
+	{
+			strcpy(con->errorMessage, "Error with multiple line comment");
+			error(con);
+	}
 }
 
 void absorbSingleLineComment(struct content * con)
@@ -326,11 +321,18 @@ int checkStartMultipleComment(struct content * con)
 	int answer = 0;
 	char temp1, temp2;
 	temp1 = fgetc(fin);
-	temp2 = fgetc(fin);
 	if(temp1 == '/')
+	{
+		temp2 = getc(fin);
 		if(temp2 == '*')
 			answer = 1;
-
+		else
+			ungetc(temp2, fin);
+	}
+	else
+	{
+		ungetc(temp1, fin);
+	}
 	return answer;
 }
 
@@ -349,4 +351,10 @@ int checkEndMultipleComment(char temp, struct content * con)
 		}
 	}
 	return answer;
+}
+
+void setTokenValue(char * string, int value)
+{
+	strcpy(tokenval.buffer, string);
+	tokenval.tokenNumber = value;
 }

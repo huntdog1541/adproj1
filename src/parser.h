@@ -30,6 +30,7 @@ struct content {
 	int errorNumber;
 };
 
+struct content con;
 /* parser - parser takes the steps to initialize steps
  * return - return 0 if error, else returns 1
  */
@@ -50,17 +51,17 @@ int startParse();
  * declareData - adds id names to symbol table as well as initialize data
  * return - returns the token value for the next token not absorbed
  */
-int declareData(struct content * con);
+void declareData(struct content * con);
 
 /* beginProgramParse - starts parsing statement after the begin keyword
  * return - returns the value of token not absorbed
  */
-int beginProgramParse(int tok, struct content * con);
+void beginProgramParse(int tok, struct content * con);
 
 /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
  * return - returns the value of token not absorbed
  */
-int progStatement(int tok, struct content * con);
+void progStatement(int tok, struct content * con);
 
 /* controlIf - absorbs the if expression in the program
  * return - no return value
@@ -75,17 +76,17 @@ void controlWhile(int tok, struct content * con);
 /* controlExpression - absorbs an expression statement in the program
  * return - returns the value of the token not absorbed
  */
-int controlExpression(struct content * con);
+void controlExpression(struct content * con);
 
 /* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
  * return - returns the value of the token not absorbed
  */
-int controlExpressionTail(int tok, struct content * con);
+void controlExpressionTail(int tok, struct content * con);
 
 /* controlCondition - absorbs the test conditions before a control loop
  * return - returns 0 if false, and 1 if true
  */
-int controlCondition(struct content * con);
+void controlCondition(struct content * con);
 
 /*  controlID - absorbs the expression that starts with an ID token
  * return - no return
@@ -101,5 +102,6 @@ int matchOperator(int t, struct content * con);
  * return - returns 0 if false and 1 if true
  */
 int matchToken(int tokenValue, struct content * con);
+
 
 #endif /* PARSER_H_ */

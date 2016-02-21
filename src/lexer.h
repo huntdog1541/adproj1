@@ -18,7 +18,9 @@ struct tokenType
 {
   char buffer[BSIZE];
   int tokenNumber;
-}
+};
+
+struct tokenType tokenval;
 
 /* getID - gets the ID name from the file.
  * return - no return value, sets the tokenval integer.
@@ -38,12 +40,12 @@ int isValidID(char t);
 /* getNextToken - gets the next token
  * return - returns the token value
  */
-int getNextToken(struct content * con);
+void getNextToken(struct content * con);
 
 /* checkSpecialChar -  check special characters that are not alphabetical or digits
  * return - returns the token value for the special sequence found
  */
-int checkSpecialChar(char temp, struct content * con);
+void checkSpecialChar(char temp, struct content * con);
 
 /* getNumber - gets a constant value from the program
  * return - no return value, but does set the tokenval
@@ -75,7 +77,7 @@ void absorbSingleLineComment(struct content * con);
 /* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
  * return - no return value
  */
-int absorbMultComment(struct content * con);
+void absorbMultComment(struct content * con);
 
 /* checkStartMultipleComment - checks to see if the start characters are equal to start multiple line sequence
  * return - returns 0 - if error and 1 - if true
@@ -86,5 +88,7 @@ int checkStartMultipleComment(struct content * con);
  * return - returns 0 - if error and 1 - if true
  */
 int checkEndMultipleComment(char temp, struct content * con);
+
+void setTokenValue(char * string, int value);
 
 #endif /* LEXER_H_ */

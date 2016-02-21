@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lexer.h"
 #include "global.h"
 #include "parser.h"
-#include "lexer.h"
 #include "error.h"
 #include "symbol.h"
 
@@ -19,14 +19,12 @@
 #define OPERATOR 412
 #define COMPARATOR 413
 
-
 /* parser - parser takes the steps to initialize steps
  * return - return 0 if error, else returns 1
  */
 int parser(char * fileName)
 {
 	puts("Parser ran");
-	struct content con;
 	contentInit(&con);
 	strcpy(con.fileName, fileName);
 	startParse();
@@ -42,13 +40,13 @@ void contentInit(struct content * con)
 	int i;
 	con->lineNumber = 0;
 	con->positionNumber = 0;
-	con->isDone =0;
+	con->isDone = 0;
 	con->canAddID = 0;
 	for(i = 0; i < BSIZE; i++)
 	{
-		con->fileName[i] = 0;
-		con->errorMessage[i] = 0;
-		con->outputFile[i] = 0;
+		con->fileName[i] = '\0';
+		con->errorMessage[i] = '\0';
+		con->outputFile[i] = '\0';
 	}
 }
 
@@ -58,19 +56,19 @@ void contentInit(struct content * con)
 int startParse(struct content * con)
 {
 	int ans = 0, t = 0;
-	openLexFile(con);
-	while(!matchToken(PROGRAM, con))
+	openLexFile();
+	while(!matchToken(PROGRAM))
 	{
-		t = getNextToken(con);
+		getNextToken();
 	}
-	t = getNextToken(con);
-	if(t == INT)
+	getNextToken();
+	if(matchToken(INT))
 	{
-		t = declareData(con);
+		declareData();
 	}
-	if(t == BEGIN)
+	if(matchToken(BEGIN))
 	{
-		t = beginProgramParse(t, con);
+		beginProgramParse();
 	}
 	else
 	{
@@ -83,57 +81,56 @@ int startParse(struct content * con)
 /* beginProgramParse - starts parsing statement after the begin keyword
  * return - returns the value of token not absorbed
  */
-int beginProgramParse(int tok, struct content * con)
+void beginProgramParse(int tok)
 {
-	if(tok == BEGIN)
+	if(matchToken(BEGIN))
 	{
-		tok = getNextToken(con);
-		while((!con->isDone) && (tok != END))
+		getNextToken();
+		while((!con.isDone) && (matchToken(END)))
 		{
-			tok = progStatement(tok, con);
+			progStatement(tok);
 		}
 	}
-	return tok;
+	return;
 }
 
 /*
  * declareData - adds id names to symbol table as well as initialize data
  * return - returns the token value for the next token not absorbed
  */
-int declareData(struct content * con)
+void declareData()
 {
-		con->canAddID = 1;
-		int t = INT;   //Already checked in previous function
-		while(t == INT)
+		con.canAddID = 1;
+		while(matchToken(INT))
 		{
-				if(matchToken(ID, con))
+				if(matchToken(ID))
 				{
-					t = getNextToken(con);
-					if(t == ASSIGNMENT)
+					getNextToken();
+					if(matchToken(ASSIGNMENT))
 					{
-						if(!matchToken(NUMERICAL_CONSTANT, con))
+						if(!matchToken(NUMERICAL_CONSTANT))
 						{
 							strcpy(con->errorMessage, "Invalid Initialization statement\n");
 							error(con);
 						}
-						t = getNextToken(con);
-						if(t == COMMA)
+						getNextToken();
+						if(matchToken(COMMA))
 						{
-							t = INT;
+							getNextToken();
 						}
-						if(t == SEMICOLON)
+						if(matchToke(SEMICOLON))
 						{
-							t = getNextToken(con);
+							getNextToken();
 						}
 					}
-					else if(t == COMMA)
+					else if(matchToken(COMMA))
 					{
-						t = INT;
+						getNextToken();
 						continue;
 					}
-					else if(t == SEMICOLON)
+					else if(matchToken(SEMICOLON))
 					{
-						t = getNextToken(con);
+						getNextToken();
 					}
 					else
 					{
@@ -147,65 +144,65 @@ int declareData(struct content * con)
 					error(con);
 				}
 		}
-		con->canAddID = 0;
-		return t;
+		con.canAddID = 0;
+		return;
 }
 
 /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
  * return - returns the value of token not absorbed
  */
-int progStatement(int tok, struct content * con)
+void progStatement()
 {
-	switch(tok)
+	switch(tokenval.tokenNumber)
 	{
 		case ID:
-				controlID(tok, con);
+				controlID();
 				break;
 		case IF:
-				controlIf(tok, con);
+				controlIf();
 				break;
 		case WHILE:
-				controlWhile(tok, con);
+				controlWhile();
 				break;
 		case END:
-					con->isDone = 1;
+					con.isDone = 1;
 				break;
 		default:
 			strcpy(con->errorMessage, "Could not find valid statement\n");
 			error(con);
 			break;
 	}
-	return getNextToken(con);
+	return;
 }
 
 /* controlIf - absorbs the if expression in the program
  * return - no return value
  */
-void controlIf(int tok, struct content * con)
+void controlIf()
 {
-		if(tok == IF)
+		if(matchToke(IF))
 		{
 			if(controlCondition(con))
 			{
-				tok = getNextToken(con);
-				while((tok != ELSE) && (tok != END_IF))
+				getNextToken(con);
+				while((!matchToken(ELSE)) && (!matchToken(END_IF)))
 				{
-					tok = progStatement(tok, con);
+					progStatement();
 				}
-				if(tok == ELSE)
+				if(matchToken(ELSE))
 				{
-						tok = getNextToken(con);
-						while((tok !=  END_IF) && (con->isDone == 0))
+						getNextToken(con);
+						while((!matchToke(END_IF)) && (con.isDone == 0))
 						{
-							tok = progStatement(tok, con);
+							progStatement();
 						}
-						if(tok != END_IF)
+						if(!matchToken(END_IF))
 						{
 							strcpy(con->errorMessage, "Invalid End of While loop\n");
 							error(con);
 						}
 				}
-				else if(tok == END_IF)
+				else if(matchToken(END_IF))
 				{
 
 				}
@@ -221,19 +218,19 @@ void controlIf(int tok, struct content * con)
 /* controlWhile - absorbs the while expression in the program
  * return - no return
  */
-void controlWhile(int tok, struct content * con)
+void controlWhile()
 {
-	if(tok == WHILE)
+	if(matchToken(WHILE))
 	{
 		if(controlCondition(con))
 		{
-			matchToken(DO, con);
-			tok = getNextToken(con);
-			while((tok != END_WHILE) && (con->isDone == 0))
+			matchToken(DO);
+			getNextToken();
+			while((!matchToken(END_WHILE)) && (con.isDone == 0))
 			{
-				tok = progStatement(tok, con);
+				progStatement();
 			}
-			if(tok == END_WHILE)
+			if(matchToken(END_WHILE))
 			{
 				//Do Nothing
 			}
@@ -249,40 +246,41 @@ void controlWhile(int tok, struct content * con)
 /* controlExpression - absorbs an expression statement in the program
  * return - returns the value of the token not absorbed
  */
-int controlExpression(struct content * con)
+void controlExpression()
 {
-	int answer = 0, t = getNextToken(con);
-	if((t == ID) || (t == NUMERICAL_CONSTANT))
+	int answer = 0;
+	getNextToken();
+	if((matchToken(ID)) || (matchToken(NUMERICAL_CONSTANT)))
 	{
-		t = getNextToken(con);
-		if(!controlExpressionTail(t, con))
+		getNextToken();
+		if(!controlExpressionTail())
 		{
 			strcpy(con->errorMessage, "Error handling expression tail\n");
 			error(con);
 		}
 	}
-	return answer;
+	return;
 }
 
 /* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
  * return - returns the value of the token not absorbed
  */
-int controlExpressionTail(int tok, struct content * con)
+int controlExpressionTail()
 {
 	int answer = 0;
-	if(matchOperator(tok, con) == OPERATOR)
+	if(matchOperator() == OPERATOR)
 	{
-		tok = getNextToken(con);
-		if(!(tok == ID) && !(tok == NUMERICAL_CONSTANT))
+		getNextToken();
+		if(!(matchToken(ID)) && !(matchToken(NUMERICAL_CONSTANT)))
 		{
 			strcpy(con->errorMessage, "Didn't find second id or number\n");
 			error(con);
 		}
-		tok = getNextToken(con);
-		if(tok == SEMICOLON)
+		getNextToken();
+		if(matchToken(SEMICOLON))
 				answer = 1;
 		else
-				answer = controlExpressionTail(tok, con);
+				answer = controlExpressionTail();
 	}
 	else
 	{
@@ -295,21 +293,22 @@ int controlExpressionTail(int tok, struct content * con)
 /* controlCondition - absorbs the test conditions before a control loop
  * return - returns 0 if false, and 1 if true
  */
-int controlCondition(struct content * con)
+void controlCondition()
 {
-	int answer = 0, t = getNextToken(con);
-	if((t == ID) || (t == NUMERICAL_CONSTANT))
+	int answer = 0;
+	getNextToken();
+	if((matchToken(ID)) || (matchToken(NUMERICAL_CONSTANT)))
 	{
-		t = getNextToken(con);
-		if(matchOperator(t, con) == COMPARATOR)
+		getNextToken(con);
+		if(matchOperator() == COMPARATOR)
 		{
-			t = getNextToken(con);
-			if(!(t == ID) && !(t == NUMERICAL_CONSTANT))
+			getNextToken();
+			if(!(match(ID) && !(match(NUMERICAL_CONSTANT))
 			{
 				strcpy(con->errorMessage, "Didn't find ending id or number\n");
 				error(con);
 			}
-			matchToken(SEMICOLON, con);
+			matchToken(SEMICOLON);
 			answer = 1;
 		}
 		else
@@ -318,19 +317,19 @@ int controlCondition(struct content * con)
 			error(con);
 		}
 	}
-	return answer;
+	return;
 }
 
 /*  controlID - absorbs the expression that starts with an ID token
  * return - no return
  */
-void controlID(int tok, struct content * con)
+void controlID()
 {
-		if(tok == ID)
+		if(matchToken(ID))
 		{
-			if(matchToken(ASSIGNMENT, con))
+			if(matchToken(ASSIGNMENT))
 			{
-				if(controlExpression(con))
+				if(controlExpression())
 				{
 
 				}
@@ -341,10 +340,10 @@ void controlID(int tok, struct content * con)
 /* matchOperator - returns the value of operator or comparator according to the token's group
  * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
  */
-int matchOperator(int t, struct content * con)
+int matchOperator(struct content * con)
 {
 	int ans = 0;
-	switch(t)
+	switch(tokenval.tokenNumber)
 	{
 		case ADDITION:
 		case SUBTRACTION:
@@ -377,12 +376,11 @@ int matchOperator(int t, struct content * con)
 int matchToken(int tokenValue, struct content * con)
 {
 	int answer = 0;
-	int temp = getNextToken(con);
-	if(temp == tokenValue)
+	if(tokenval.tokenNumber == tokenValue)
 		answer = 1;
 	else
 	{
-		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, temp);
+		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, tokenval.tokenNumber);
 		error(con);
 	}
 	return answer;
