@@ -14,6 +14,11 @@
 #ifndef LEXER_H_
 #define LEXER_H_
 
+struct tokenType
+{
+  char buffer[BSIZE];
+  int tokenNumber;
+}
 
 /* getID - gets the ID name from the file.
  * return - no return value, sets the tokenval integer.

@@ -13,7 +13,7 @@
 #include "error.h"
 
 FILE * fin;
-int tokenval = 0;
+struct tokenType tokenval;
 
 /* openLexFile - sets the global file pointer
  * return - no return value
@@ -72,6 +72,7 @@ void getID(struct content * con)
 			con->isDone = 1;
 		}
 		p = lookup(lexbuf);
+		strcpy(tokenval.buffer, lexbuf);
 		if((p == NOT_FOUND) && (con->canAddID == 1))
 			p = insert(lexbuf, ID, "ID");
 		else if(p == NOT_FOUND)
@@ -82,7 +83,7 @@ void getID(struct content * con)
 				error(con);
 			}
 		}
-		tokenval = getTokenType(p);
+		tokenval.tokenNumber = getTokenType(p);
 		//printf("Token Value %d\n", tokenval);
 }
 
