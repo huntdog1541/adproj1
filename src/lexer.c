@@ -18,10 +18,10 @@ FILE * fin;
 /* openLexFile - sets the global file pointer
  * return - no return value
  */
-void openLexFile(struct content * con)
+void openLexFile()
 {
-	fin = fopen(con->fileName, "r");
-	printf("File Name: %s\n", con->fileName);
+	fin = fopen(con.fileName, "r");
+	printf("File Name: %s\n", con.fileName);
 	if(!fin)
 	{
 		perror("File Not Found\n");
@@ -32,7 +32,7 @@ void openLexFile(struct content * con)
 /* getID - gets the ID name from the file.
  * return - no return value, sets the tokenval integer.
  */
-void getID(struct content * con)
+void getID()
 {
 		int i = 0, p = 0;
 		char temp = fgetc(fin);
@@ -41,45 +41,45 @@ void getID(struct content * con)
 		{
 			lexbuf[i++] = temp;
 			temp = fgetc(fin);
-			con->positionNumber++;
+			con.positionNumber++;
 			if(temp == '_')  //Check to see if a character has an underscore
 			{
 				if(isalnum(lookahead(con)))  //See if the next character is a letter or number
 				{
 					lexbuf[i++] = temp;
 					temp = fgetc(fin);
-					con->positionNumber++;
+					con.positionNumber++;
 				}
 				else
 				{
 					fprintf(stderr, "Error\n");
-					strcpy(con->errorMessage, "Error: Invalid ID name");
-					error(con);
+					strcpy(con.errorMessage, "Error: Invalid ID name");
+					error(&con);
 				}
 			}
 			if(i >= BSIZE)
 			{
-				strcpy(con->errorMessage, "Exceeded buffer size");
-				error(con);
+				strcpy(con.errorMessage, "Exceeded buffer size");
+				error(&con);
 			}
 		}
 		ungetc(temp, fin);
-		con->positionNumber--;
+		con.positionNumber--;
 		lexbuf[i] = EOS;
 		if(temp == EOF)
 		{
 			ungetc(temp, fin);  //Ungets the EOF so to avoid error when calling getc again after end of file
-			con->isDone = 1;
+			con.isDone = 1;
 		}
 		p = lookup(lexbuf);
-		if((p == NOT_FOUND) && (con->canAddID == 1))
+		if((p == NOT_FOUND) && (con.canAddID == 1))
 			p = insert(lexbuf, ID, "ID");
 		else if(p == NOT_FOUND)
 		{
-			if(con->canAddID == 0)
+			if(con.canAddID == 0)
 			{
-				strcpy(con->errorMessage, "Can't add ID");
-				error(con);
+				strcpy(con.errorMessage, "Can't add ID");
+				error(&con);
 			}
 		}
 		p = getTokenType(p);
@@ -102,13 +102,13 @@ char * getToken(char * buffer, char t)
 /* getNextToken - gets the next token
  * return - returns the token value
  */
-void getNextToken(struct content * con)
+void getNextToken()
 {
 	char temp;
 	temp = fgetc(fin);
 	if(temp == EOF)
 	{
-		con->isDone = 1;
+		con.isDone = 1;
 		return;
 	}
 	else if((temp == ' ') || (temp == '\t'))
@@ -118,7 +118,7 @@ void getNextToken(struct content * con)
 	}
   	else if(temp == '\n')
 	{
-		con->lineNumber++;
+		con.lineNumber++;
 		return (getNextToken(con));
 	}
 	else if(isalpha(temp))
@@ -131,18 +131,18 @@ void getNextToken(struct content * con)
 		ungetc(temp, fin);
 		getNumber(con);
 	}
-	checkSpecialChar(temp, con);
+	checkSpecialChar(temp);
 }
 
 /* absorbSpace - runs a loop to absorb all spaces between words
  * return - no return value
  */
-void absorbSpace(struct content * con)
+void absorbSpace()
 {
 	char temp = fgetc(fin);
 	while((temp == ' ') || (temp == '\t'))
 	{
-		con->positionNumber++;
+		con.positionNumber++;
 		temp = fgetc(fin);
 	}
 	ungetc(temp, fin);
@@ -161,10 +161,10 @@ char lookahead()
 /* getNumber - gets a constant value from the program
  * return - no return value, but does set the tokenval
  */
-void getNumber(struct content * con)
+void getNumber()
 {
 	char t = fgetc(fin);
-	con->positionNumber++;
+	con.positionNumber++;
 	char buffer[BSIZE];
 	int i = 0;
 	buffer[i++] = t;
@@ -172,10 +172,10 @@ void getNumber(struct content * con)
 	{
 		buffer[i++] = t;
 		t = fgetc(fin);
-		con->positionNumber++;
+		con.positionNumber++;
 	}
 	ungetc(t, fin);
-	con->positionNumber--;
+	con.positionNumber--;
 	atoi(buffer);
 	/*int value = atoi(buffer);
 	if(value )
@@ -188,7 +188,7 @@ void getNumber(struct content * con)
 /* checkSpecialChar -  check special characters that are not alphabetical or digits
  * return - returns the token value for the special sequence found
  */
-void checkSpecialChar(char temp, struct content * con)
+void checkSpecialChar(char temp)
 {
 	switch(temp)
 	{
@@ -196,7 +196,7 @@ void checkSpecialChar(char temp, struct content * con)
 			if((lookahead() == '='))
 			{
 				fgetc(fin);
-				con->positionNumber++;
+				con.positionNumber++;
 				setTokenValue("==", EQUALITY);
 			}
 			else
@@ -206,14 +206,14 @@ void checkSpecialChar(char temp, struct content * con)
 			if((lookahead() == '/'))
 			{
 				fgetc(fin);
-				con->positionNumber++;
+				con.positionNumber++;
 				absorbSingleLineComment(con);
 				getNextToken(con);
 			}
 			else if((lookahead() == '*'))
 			{
 				ungetc(temp, fin);
-				con->positionNumber--;
+				con.positionNumber--;
 				absorbMultComment(con);
 			}
 			else
@@ -229,7 +229,7 @@ void checkSpecialChar(char temp, struct content * con)
 			if((lookahead() == '='))
 			{
 				fgetc(fin);
-				con->positionNumber++;
+				con.positionNumber++;
 				setTokenValue(">=", GREATERTHANANDEQUAL);
 			}
 			else
@@ -239,11 +239,11 @@ void checkSpecialChar(char temp, struct content * con)
 			if((lookahead() == '='))
 			{
 				fgetc(fin);
-				con->positionNumber++;
+				con.positionNumber++;
 				if((lookahead() == '>'))
 				{
 					fgetc(fin);
-					con->positionNumber++;
+					con.positionNumber++;
 					setTokenValue("<=>" ,STRINGEQUAL);
 				}
 				else
@@ -277,46 +277,46 @@ void printAllString(char * string)
 /* absorbMultComment - runs loop to absorb all content from between a multiple line comment signs
  * return - no return value
  */
-void absorbMultComment(struct content * con)
+void absorbMultComment()
 {
 	char temp;
 	if(checkStartMultipleComment(con))
 	{
 		temp = fgetc(fin);
-		con->positionNumber++;
-		while(checkEndMultipleComment(temp, con))
+		con.positionNumber++;
+		while(checkEndMultipleComment(temp))
 		{
 			temp = fgetc(fin);
 			if(temp == '\0')
 			{
-				con->lineNumber++;
-				con->positionNumber = 0;
+				con.lineNumber++;
+				con.positionNumber = 0;
 			}
 			else
-				con->positionNumber++;
+				con.positionNumber++;
 		}
 	}
 	else
 	{
-			strcpy(con->errorMessage, "Error with multiple line comment");
-			error(con);
+			strcpy(con.errorMessage, "Error with multiple line comment");
+			error(&con);
 	}
 }
 
-void absorbSingleLineComment(struct content * con)
+void absorbSingleLineComment()
 {
 	char temp = getc(fin);
 	while(temp != '\n')
 	{
 		temp = getc(fin);
 	}
-	con->lineNumber++;
-	con->positionNumber = 0;
+	con.lineNumber++;
+	con.positionNumber = 0;
 }
 /* checkStartMultipleComment - checks to see if the start characters are equal to start multiple line comment
  * return - returns 0 - if error and 1 - if true
  */
-int checkStartMultipleComment(struct content * con)
+int checkStartMultipleComment()
 {
 	int answer = 0;
 	char temp1, temp2;
@@ -339,7 +339,7 @@ int checkStartMultipleComment(struct content * con)
 /* checkEndMultipleComment - checks to see if the end characters are equal end multiple comment sequence
  * return - returns 0 - if error and 1 - if true
  */
-int checkEndMultipleComment(char temp, struct content * con)
+int checkEndMultipleComment(char temp)
 {
 	int answer = 1;
 	if(temp == '*')

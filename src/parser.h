@@ -31,6 +31,8 @@ struct content {
 };
 
 struct content con;
+
+
 /* parser - parser takes the steps to initialize steps
  * return - return 0 if error, else returns 1
  */
@@ -44,64 +46,64 @@ void contentInit(struct content * con);
 /* startParse - starts the parsing steps
 * return - return 0 if error, else returns 1
 */
-int startParse();
+void startParse();
 
 
 /*
  * declareData - adds id names to symbol table as well as initialize data
  * return - returns the token value for the next token not absorbed
  */
-void declareData(struct content * con);
+void declareData();
 
 /* beginProgramParse - starts parsing statement after the begin keyword
  * return - returns the value of token not absorbed
  */
-void beginProgramParse(int tok, struct content * con);
+void beginProgramParse();
 
 /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
  * return - returns the value of token not absorbed
  */
-void progStatement(int tok, struct content * con);
+void progStatement();
 
 /* controlIf - absorbs the if expression in the program
  * return - no return value
  */
-void controlIf(int tok, struct content * con);
+void controlIf();
 
 /* controlWhile - absorbs the while expression in the program
  * return - no return
  */
-void controlWhile(int tok, struct content * con);
+void controlWhile();
 
 /* controlExpression - absorbs an expression statement in the program
  * return - returns the value of the token not absorbed
  */
-void controlExpression(struct content * con);
+int controlExpression();
 
 /* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
  * return - returns the value of the token not absorbed
  */
-void controlExpressionTail(int tok, struct content * con);
+int controlExpressionTail();
 
 /* controlCondition - absorbs the test conditions before a control loop
  * return - returns 0 if false, and 1 if true
  */
-void controlCondition(struct content * con);
+int controlCondition();
 
 /*  controlID - absorbs the expression that starts with an ID token
  * return - no return
  */
-void controlID(int tok, struct content * con);
+void controlID();
 
 /* matchOperator - returns the value of operator or comparator according to the token's group
  * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
  */
-int matchOperator(int t, struct content * con);
+int matchOperator();
 
 /* matchToken - compares a token value to the value expected
  * return - returns 0 if false and 1 if true
  */
-int matchToken(int tokenValue, struct content * con);
+int matchToken(int tokenValue);
 
 
 #endif /* PARSER_H_ */

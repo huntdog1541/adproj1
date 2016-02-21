@@ -53,9 +53,8 @@ void contentInit(struct content * con)
 /* startParse - starts the parsing steps
 * return - return 0 if error, else returns 1
 */
-int startParse(struct content * con)
+void startParse()
 {
-	int ans = 0, t = 0;
 	openLexFile();
 	while(!matchToken(PROGRAM))
 	{
@@ -72,26 +71,24 @@ int startParse(struct content * con)
 	}
 	else
 	{
-		strcpy(con->errorMessage, "No Statements to run\n");
-		error(con);
+		strcpy(con.errorMessage, "No Statements to run\n");
+		error(&con);
 	}
-	return ans;
 }
 
 /* beginProgramParse - starts parsing statement after the begin keyword
  * return - returns the value of token not absorbed
  */
-void beginProgramParse(int tok)
+void beginProgramParse()
 {
 	if(matchToken(BEGIN))
 	{
 		getNextToken();
 		while((!con.isDone) && (matchToken(END)))
 		{
-			progStatement(tok);
+			progStatement();
 		}
 	}
-	return;
 }
 
 /*
@@ -110,15 +107,15 @@ void declareData()
 					{
 						if(!matchToken(NUMERICAL_CONSTANT))
 						{
-							strcpy(con->errorMessage, "Invalid Initialization statement\n");
-							error(con);
+							strcpy(con.errorMessage, "Invalid Initialization statement\n");
+							error(&con);
 						}
 						getNextToken();
 						if(matchToken(COMMA))
 						{
 							getNextToken();
 						}
-						if(matchToke(SEMICOLON))
+						if(matchToken(SEMICOLON))
 						{
 							getNextToken();
 						}
@@ -134,18 +131,17 @@ void declareData()
 					}
 					else
 					{
-						strcpy(con->errorMessage, "Invalid Assignment statement\n");
-						error(con);
+						strcpy(con.errorMessage, "Invalid Assignment statement\n");
+						error(&con);
 					}
 				}
 				else
 				{
-					strcpy(con->errorMessage, "Didn't find ID");
-					error(con);
+					strcpy(con.errorMessage, "Didn't find ID");
+					error(&con);
 				}
 		}
 		con.canAddID = 0;
-		return;
 }
 
 /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
@@ -168,11 +164,10 @@ void progStatement()
 					con.isDone = 1;
 				break;
 		default:
-			strcpy(con->errorMessage, "Could not find valid statement\n");
-			error(con);
+			strcpy(con.errorMessage, "Could not find valid statement\n");
+			error(&con);
 			break;
 	}
-	return;
 }
 
 /* controlIf - absorbs the if expression in the program
@@ -180,11 +175,11 @@ void progStatement()
  */
 void controlIf()
 {
-		if(matchToke(IF))
+		if(matchToken(IF))
 		{
-			if(controlCondition(con))
+			if(controlCondition())
 			{
-				getNextToken(con);
+				getNextToken();
 				while((!matchToken(ELSE)) && (!matchToken(END_IF)))
 				{
 					progStatement();
@@ -192,14 +187,14 @@ void controlIf()
 				if(matchToken(ELSE))
 				{
 						getNextToken(con);
-						while((!matchToke(END_IF)) && (con.isDone == 0))
+						while((!matchToken(END_IF)) && (con.isDone == 0))
 						{
 							progStatement();
 						}
 						if(!matchToken(END_IF))
 						{
-							strcpy(con->errorMessage, "Invalid End of While loop\n");
-							error(con);
+							strcpy(con.errorMessage, "Invalid End of While loop\n");
+							error(&con);
 						}
 				}
 				else if(matchToken(END_IF))
@@ -209,8 +204,8 @@ void controlIf()
 			}
 			else
 			{
-				strcpy(con->errorMessage, "Invalid Expression\n");
-				error(con);
+				strcpy(con.errorMessage, "Invalid Expression\n");
+				error(&con);
 			}
 		}
 }
@@ -222,7 +217,7 @@ void controlWhile()
 {
 	if(matchToken(WHILE))
 	{
-		if(controlCondition(con))
+		if(controlCondition())
 		{
 			matchToken(DO);
 			getNextToken();
@@ -236,8 +231,8 @@ void controlWhile()
 			}
 			else
 			{
-				strcpy(con->errorMessage, "Invalid End of While loop\n");
-				error(con);
+				strcpy(con.errorMessage, "Invalid End of While loop\n");
+				error(&con);
 			}
 		}
 	}
@@ -246,7 +241,7 @@ void controlWhile()
 /* controlExpression - absorbs an expression statement in the program
  * return - returns the value of the token not absorbed
  */
-void controlExpression()
+int controlExpression()
 {
 	int answer = 0;
 	getNextToken();
@@ -255,11 +250,11 @@ void controlExpression()
 		getNextToken();
 		if(!controlExpressionTail())
 		{
-			strcpy(con->errorMessage, "Error handling expression tail\n");
-			error(con);
+			strcpy(con.errorMessage, "Error handling expression tail\n");
+			error(&con);
 		}
 	}
-	return;
+	return answer;
 }
 
 /* controlExpressionTail - absorbs the end of the expression, allows for longer expressions
@@ -273,8 +268,8 @@ int controlExpressionTail()
 		getNextToken();
 		if(!(matchToken(ID)) && !(matchToken(NUMERICAL_CONSTANT)))
 		{
-			strcpy(con->errorMessage, "Didn't find second id or number\n");
-			error(con);
+			strcpy(con.errorMessage, "Didn't find second id or number\n");
+			error(&con);
 		}
 		getNextToken();
 		if(matchToken(SEMICOLON))
@@ -284,8 +279,8 @@ int controlExpressionTail()
 	}
 	else
 	{
-		strcpy(con->errorMessage, "Error with Expression tail\n");
-		error(con);
+		strcpy(con.errorMessage, "Error with Expression tail\n");
+		error(&con);
 	}
 	return answer;
 }
@@ -293,7 +288,7 @@ int controlExpressionTail()
 /* controlCondition - absorbs the test conditions before a control loop
  * return - returns 0 if false, and 1 if true
  */
-void controlCondition()
+int controlCondition()
 {
 	int answer = 0;
 	getNextToken();
@@ -303,21 +298,21 @@ void controlCondition()
 		if(matchOperator() == COMPARATOR)
 		{
 			getNextToken();
-			if(!(match(ID) && !(match(NUMERICAL_CONSTANT))
+			if(!(matchToken(ID)) && !(matchToken(NUMERICAL_CONSTANT)))
 			{
-				strcpy(con->errorMessage, "Didn't find ending id or number\n");
-				error(con);
+				strcpy(con.errorMessage, "Didn't find ending id or number\n");
+				error(&con);
 			}
 			matchToken(SEMICOLON);
 			answer = 1;
 		}
 		else
 		{
-			strcpy(con->errorMessage, "Didn't find comparator\n");
-			error(con);
+			strcpy(con.errorMessage, "Didn't find comparator\n");
+			error(&con);
 		}
 	}
-	return;
+	return answer;
 }
 
 /*  controlID - absorbs the expression that starts with an ID token
@@ -340,7 +335,7 @@ void controlID()
 /* matchOperator - returns the value of operator or comparator according to the token's group
  * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
  */
-int matchOperator(struct content * con)
+int matchOperator()
 {
 	int ans = 0;
 	switch(tokenval.tokenNumber)
@@ -363,8 +358,8 @@ int matchOperator(struct content * con)
 				ans = SEMICOLON;
 				break;
 		default:
-				strcpy(con->errorMessage, "Couldn't find Operator or Comparator\n");
-				error(con);
+				strcpy(con.errorMessage, "Couldn't find Operator or Comparator\n");
+				error(&con);
 				break;
 	}
 	return ans;
@@ -373,15 +368,15 @@ int matchOperator(struct content * con)
 /* matchToken - compares a token value to the value expected
  * return - returns 0 if false and 1 if true
  */
-int matchToken(int tokenValue, struct content * con)
+int matchToken(int tokenValue)
 {
 	int answer = 0;
 	if(tokenval.tokenNumber == tokenValue)
 		answer = 1;
 	else
 	{
-		sprintf(con->errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, tokenval.tokenNumber);
-		error(con);
+		sprintf(con.errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, tokenval.tokenNumber);
+		error(&con);
 	}
 	return answer;
 }
