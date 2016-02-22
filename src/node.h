@@ -26,9 +26,11 @@ struct nodeHandler {
   struct node * tempNode;
 }
 
+struct nodeHandler hand;
+
 struct node * createNode();
 
-struct node * createRoot(struct nodeHandler * hand);
+struct node * createRoot();
 
 struct node * bindNode(struct node * currentNode, struct node * tempNode);
 
@@ -36,7 +38,7 @@ struct node * addLOP(struct node * currentNode);
 
 struct node * addROP(struct node * currentNode);
 
-struct nodeHandler * destroyTree(struct nodeHandler * hand);
+struct nodeHandler * destroyTree();
 
 struct node * destroyNode(struct node * temp);
 

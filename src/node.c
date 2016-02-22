@@ -17,7 +17,7 @@ struct node * createNode()
   return temp;
 }
 
-struct nodeHandler * createRoot(struct nodeHandler * hand)
+struct nodeHandler * createRoot()
 {
   hand->root = createNode();
   return hand;
