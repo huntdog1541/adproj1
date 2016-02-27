@@ -17,7 +17,7 @@ struct node {
   struct node * loperand;
   struct node * roperand;
   struct node * nextNode;
-  struct node * next;
+  struct node * alternative;
 }
 
 struct nodeHandler {
