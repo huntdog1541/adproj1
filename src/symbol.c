@@ -156,6 +156,17 @@ int getTokenType(int pos)
   return symtable[pos].token;
 }
 
+int lookupNumber(int numb)
+{
+	int i;
+	for(i = lastentry; i > 0; i--)
+	{
+      if(symtable[i].token == numb)
+        return i;
+	}
+	return NOT_FOUND;
+}
+
 /* printSymbol - prints all the content from the symbol table - a ultilty function
  * return - returns no value
  */

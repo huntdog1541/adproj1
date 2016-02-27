@@ -25,7 +25,7 @@ void init();
 int lookup(char s[]);
 
 /* insert - inserts a value into the symbol table
- * return - 
+ * return -
  */
 int insert(char s[], int tok, char tN[]);
 
@@ -43,5 +43,7 @@ int getTokenType(int pos);
  * return - returns no value
  */
 void printSymbol();
+
+int lookupNumber(int numb);
 
 #endif /* SYMBOL_H_ */

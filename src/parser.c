@@ -56,6 +56,7 @@ void contentInit(struct content * con)
 void startParse()
 {
 	openLexFile();
+	getNextToken();
 	while(!matchToken(PROGRAM))
 	{
 		getNextToken();
@@ -375,7 +376,8 @@ int matchToken(int tokenValue)
 		answer = 1;
 	else
 	{
-		sprintf(con.errorMessage, "Error expect token type value of %d but got %d\n", tokenValue, tokenval.tokenNumber);
+		int a1 = lookupNumber(tokenValue), a2 = lookupNumber(tokenval.tokenNumber);
+		sprintf(con.errorMessage, "Error expect token type value of %d: %s but got %d: %s\n", tokenValue, (getLexeme(a1)), tokenval.tokenNumber, (getLexeme(a2)));
 		error(&con);
 	}
 	return answer;

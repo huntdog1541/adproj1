@@ -13,7 +13,7 @@ struct node * createNode()
   temp->loperand = NULL;
   temp->roperand = NULL;
   temp->nextNode = NULL;
-  temp->next     = NULL;
+  temp->alternative  = NULL;
   return temp;
 }
 
@@ -57,8 +57,8 @@ struct node * destroyNode(struct node * temp)
     destroyNode(temp->loperand);
   if(temp->roperand = NULL)
     destroyNode(temp->roperand);
-  if(temp->next != NULL)
-    destroyNode(temp->next);
+  if(temp->alternative != NULL)
+    destroyNode(temp->alternative);
   temp = free(temp);
   return temp;
 }
