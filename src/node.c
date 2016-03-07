@@ -6,10 +6,10 @@
 #include <string.h>
 #include "node.h"
 
-struct node * createNode()
+node * createNode()
 {
-  struct node * temp = (struct node *)calloc(sizeof(struct node));
-  temp->tokenNumber = NULL;
+  struct node * temp = (struct node *)calloc(1, sizeof(struct node));
+  temp->tokenNumber = 0;
   temp->loperand = NULL;
   temp->roperand = NULL;
   temp->nextNode = NULL;
@@ -17,31 +17,30 @@ struct node * createNode()
   return temp;
 }
 
-struct nodeHandler * createRoot()
+void createRoot()
 {
-  hand->root = createNode();
-  return hand;
+  hand.root = createNode();
 }
 
-struct node * bindNode(struct node * currentNode, struct node * tempNode)
+node * bindNode(struct node * currentNode, struct node * tempNode)
 {
   currentNode->nextNode = tempNode;
   return tempNode;
 }
 
-struct node * addLOP(struct node * currentNode)
+node * addLOP(struct node * currentNode)
 {
   currentNode->loperand = createNode();
   return currentNode->loperand;
 }
 
-struct node * addROP(struct node * currentNode)
+node * addROP(struct node * currentNode)
 {
   currentNode->roperand = createNode();
   return currentNode->roperand;
 }
 
-struct nodeHandler * destroyTree(struct nodeHandler * hand)
+nodeHandler * destroyTree(struct nodeHandler * hand)
 {
   hand->tempNode = NULL;
   hand->currentNode = NULL;
@@ -49,16 +48,16 @@ struct nodeHandler * destroyTree(struct nodeHandler * hand)
   return hand;
 }
 
-struct node * destroyNode(struct node * temp)
+node * destroyNode(struct node * temp)
 {
   if(temp->nextNode != NULL)
     destroyNode(temp->nextNode);
   if(temp->loperand != NULL)
     destroyNode(temp->loperand);
-  if(temp->roperand = NULL)
+  if(temp->roperand != NULL)
     destroyNode(temp->roperand);
   if(temp->alternative != NULL)
     destroyNode(temp->alternative);
-  temp = free(temp);
+  free(temp);
   return temp;
 }
