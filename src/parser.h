@@ -55,6 +55,13 @@ void startParse();
  */
 void declareData();
 
+/*
+*
+*/
+void declaration();
+
+void declarAssignment();
+
 /* beginProgramParse - starts parsing statement after the begin keyword
  * return - returns the value of token not absorbed
  */
@@ -105,5 +112,6 @@ int matchOperator();
  */
 int matchToken(int tokenValue);
 
+void errorReport(int tokenValue);
 
 #endif /* PARSER_H_ */

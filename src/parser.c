@@ -101,48 +101,41 @@ void declareData()
 		con.canAddID = 1;
 		while(matchToken(INT))
 		{
-				if(matchToken(ID))
-				{
-					getNextToken();
-					if(matchToken(ASSIGNMENT))
-					{
-						if(!matchToken(NUMERICAL_CONSTANT))
-						{
-							strcpy(con.errorMessage, "Invalid Initialization statement\n");
-							error(&con);
-						}
-						getNextToken();
-						if(matchToken(COMMA))
-						{
-							getNextToken();
-						}
-						if(matchToken(SEMICOLON))
-						{
-							getNextToken();
-						}
-					}
-					else if(matchToken(COMMA))
-					{
-						getNextToken();
-						continue;
-					}
-					else if(matchToken(SEMICOLON))
-					{
-						getNextToken();
-					}
-					else
-					{
-						strcpy(con.errorMessage, "Invalid Assignment statement\n");
-						error(&con);
-					}
-				}
-				else
-				{
-					strcpy(con.errorMessage, "Didn't find ID");
-					error(&con);
-				}
+			getNextToken();
+			declaration();
 		}
 		con.canAddID = 0;
+}
+
+void declaration()
+{
+	while(matchToken(ID))
+	{
+		getNextToken();
+		declarAssignment();
+		if(matchToken(COMMA))
+		{
+			getNextToken();
+			continue;
+		}
+		else if(matchToken(SEMICOLON))
+			getNextToken();
+		else
+			errorReport(SEMICOLON);
+	}
+}
+
+void declarAssignment()
+{
+	if(matchToken(ASSIGNMENT))
+	{
+		getNextToken();
+		if(matchToken(NUMERICAL_CONSTANT))
+		{
+			getNextToken();
+		}
+
+	}
 }
 
 /* progStatement - checks how to evaluate the next statement (IF, WHILE, or EXPRESSION)
@@ -164,6 +157,10 @@ void progStatement()
 		case END:
 					con.isDone = 1;
 				break;
+		case READ:
+			    break;
+		case WRITE:
+			 	break;
 		default:
 			strcpy(con.errorMessage, "Could not find valid statement\n");
 			error(&con);
@@ -374,11 +371,12 @@ int matchToken(int tokenValue)
 	int answer = 0;
 	if(tokenval.tokenNumber == tokenValue)
 		answer = 1;
-	else
-	{
-		int a1 = lookupNumber(tokenValue), a2 = lookupNumber(tokenval.tokenNumber);
-		sprintf(con.errorMessage, "Error expect token type value of %d: %s but got %d: %s\n", tokenValue, (getLexeme(a1)), tokenval.tokenNumber, (getLexeme(a2)));
-		error(&con);
-	}
 	return answer;
+}
+
+void errorReport(int tokenValue)
+{
+	int a1 = lookupNumber(tokenValue), a2 = lookupNumber(tokenval.tokenNumber);
+	sprintf(con.errorMessage, "Error expect token type value of %d: %s but got %d: %s\n", tokenValue, (getLexeme(a1)), tokenval.tokenNumber, (getLexeme(a2)));
+	error(&con);
 }

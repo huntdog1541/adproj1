@@ -77,6 +77,8 @@ int lastentry = 0;
       {"float", FLOAT, "FLOAT", },\
       {"char", CHAR, "CHAR", },\
       {"string", STRING, "STRING", },\
+	  {"read", READ, "READ", },\
+	  {"write", WRITE, "WRITE", },\
       {0, 0, 0}
 };
 

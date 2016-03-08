@@ -41,6 +41,8 @@
 #define SINGLECOMMENT 319
 #define STARTMULTIPLECOMMENT 320
 #define ENDMULTIPLECOMMENT 321
+#define READ 322
+#define WRITE 323
 
 //Operators and Comparators
 #define ASSIGNMENT 400
