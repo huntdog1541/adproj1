@@ -9,6 +9,7 @@
 node * createNode()
 {
   struct node * temp = (struct node *)calloc(1, sizeof(struct node));
+  temp->tokenName = NULL;
   temp->tokenNumber = 0;
   temp->loperand = NULL;
   temp->roperand = NULL;
@@ -60,4 +61,19 @@ node * destroyNode(struct node * temp)
     destroyNode(temp->alternative);
   free(temp);
   return temp;
+}
+
+void addTokenName(node * temp, char * string)
+{
+  temp->tokenName = string;
+}
+
+void addTokenValue(node * temp, int value)
+{
+  temp->tokenNumber = value;
+}
+
+void addTokens()
+{
+  addTokenName(hand.currentNode, 
 }

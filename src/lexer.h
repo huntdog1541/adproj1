@@ -27,6 +27,15 @@ struct tokenType tokenval;
  */
 void getID();
 
+/* openLexFile - sets the global file pointer
+ * return - no return value
+ */
+void openLexFile();
+
+void closeLexFile();
+
+
+
 /* getToken -
  *
  */

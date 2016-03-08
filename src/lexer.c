@@ -29,6 +29,11 @@ void openLexFile()
 	}
 }
 
+void closeLexFile()
+{
+	fclose(fin);
+}
+
 /* getID - gets the ID name from the file.
  * return - no return value, sets the tokenval integer.
  */

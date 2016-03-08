@@ -12,7 +12,7 @@
 #define BUFFERSIZE 256
 
 typedef struct node {
-  char tokenValue[BUFFERSIZE];
+  char * tokenName;
   int tokenNumber;
   struct node * loperand;
   struct node * roperand;
@@ -21,9 +21,9 @@ typedef struct node {
 }node;
 
 typedef struct nodeHandler {
-  struct node * root;
-  struct node * currentNode;
-  struct node * tempNode;
+  node * root;
+  node * currentNode;
+  node * tempNode;
 }nodeHandler;
 
 nodeHandler hand;
@@ -41,5 +41,10 @@ node * addROP(struct node * currentNode);
 nodeHandler * destroyTree();
 
 node * destroyNode(struct node * temp);
+
+void addTokenName(node * temp, char * string);
+
+void addTokenValue(node * temp, int value);
+
 
 #endif
