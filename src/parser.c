@@ -85,7 +85,7 @@ void beginProgramParse()
 	if(matchToken(BEGIN))
 	{
 		getNextToken();
-		while((!con.isDone) && (matchToken(END)))
+		while((!con.isDone))
 		{
 			progStatement();
 		}
@@ -155,7 +155,7 @@ void progStatement()
 				controlWhile();
 				break;
 		case END:
-					con.isDone = 1;
+				con.isDone = 1;
 				break;
 		case READ:
 				controlRead();
@@ -173,19 +173,27 @@ void progStatement()
 void controlRead()
 {
 	char * varb;
-	if(match(READ))
+	if(matchToken(READ))
 	{
 		getNextToken();
-		if(match(LPARENTSIS))
+		if(matchToken(LPARENTSIS))
 		{
 			getNextToken();
-			if(match(ID))
+			if(matchToken(ID))
 			{
-
+				printf("Value is %s\n", tokenval.buffer);
 				getNextToken();
-				if(match(RPARENTSIS))
+				if(matchToken(RPARENTSIS))
 				{
-
+					getNextToken();
+					if(matchToken(SEMICOLON))
+					{
+						getNextToken();
+					}
+					else
+					{
+						errorReport(SEMICOLON);
+					}
 				}
 				else
 				{
@@ -207,19 +215,27 @@ void controlRead()
 void controlWrite()
 {
 	char * varb;
-	if(match(WRITE))
+	if(matchToken(WRITE))
 	{
 		getNextToken();
-		if(match(LPARENTSIS))
+		if(matchToken(LPARENTSIS))
 		{
 			getNextToken();
-			if(match(ID))
+			if(matchToken(ID))
 			{
-
+				printf("Value is %s\n", tokenval.buffer);
 				getNextToken();
-				if(match(RPARENTSIS))
+				if(matchToken(RPARENTSIS))
 				{
-
+					getNextToken();
+					if(matchToken(SEMICOLON))
+					{
+						getNextToken();
+					}
+					else
+					{
+						errorReport(SEMICOLON);
+					}
 				}
 				else
 				{

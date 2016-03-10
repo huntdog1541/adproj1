@@ -263,6 +263,11 @@ void checkSpecialChar(char temp)
 		case ',' :
 			setTokenValue(",", COMMA);
 			break;
+		case '(' :
+			setTokenValue("(", LPARENTSIS);
+			break;
+		case ')' :
+			setTokenValue(")", RPARENTSIS);
 		default: break;
 	}
 }

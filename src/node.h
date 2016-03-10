@@ -46,5 +46,6 @@ void addTokenName(node * temp, char * string);
 
 void addTokenValue(node * temp, int value);
 
+void addTokens(node * temp, char * string, int value);
 
 #endif

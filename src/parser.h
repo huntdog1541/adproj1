@@ -55,6 +55,10 @@ void startParse();
  */
 void declareData();
 
+
+void controlWrite();
+
+void controlRead();
 /*
 *
 */

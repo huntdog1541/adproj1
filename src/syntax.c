@@ -11,8 +11,8 @@
 #include "symbol.h"
 #include "lexer.h"
 #include "error.h"
-#include "syntax.h"
 #include "node.h"
+#include "syntax.h"
 
 /* openLexFile - sets the global file pointer
  * return - no return value
@@ -28,5 +28,5 @@ void startSyntaxTree()
     getNextToken();
   }
   temp = lookupNumber(PROGRAM);
-  addToken(hand->root, getTokenName(temp), getTokenType(temp));
+  addTokens(hand.root, getTokenName(temp), getTokenType(temp));
 }
