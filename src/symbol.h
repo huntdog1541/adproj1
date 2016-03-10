@@ -46,4 +46,6 @@ void printSymbol();
 
 int lookupNumber(int numb);
 
+char * getTokenName(int pos);
+
 #endif /* SYMBOL_H_ */

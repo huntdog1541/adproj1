@@ -169,6 +169,11 @@ int lookupNumber(int numb)
 	return NOT_FOUND;
 }
 
+char * getTokenName(int pos)
+{
+  return symtable[pos].tokenName;
+}
+
 /* printSymbol - prints all the content from the symbol table - a ultilty function
  * return - returns no value
  */

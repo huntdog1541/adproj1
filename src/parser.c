@@ -158,13 +158,83 @@ void progStatement()
 					con.isDone = 1;
 				break;
 		case READ:
+				controlRead();
 			    break;
 		case WRITE:
+				controlWrite();
 			 	break;
 		default:
 			strcpy(con.errorMessage, "Could not find valid statement\n");
 			error(&con);
 			break;
+	}
+}
+
+void controlRead()
+{
+	char * varb;
+	if(match(READ))
+	{
+		getNextToken();
+		if(match(LPARENTSIS))
+		{
+			getNextToken();
+			if(match(ID))
+			{
+
+				getNextToken();
+				if(match(RPARENTSIS))
+				{
+
+				}
+				else
+				{
+					 errorReport(RPARENTSIS);
+				}
+			}
+			else
+			{
+				 errorReport(ID);
+			}
+		}
+		else
+		{
+			errorReport(LPARENTSIS);
+		}
+	}
+}
+
+void controlWrite()
+{
+	char * varb;
+	if(match(WRITE))
+	{
+		getNextToken();
+		if(match(LPARENTSIS))
+		{
+			getNextToken();
+			if(match(ID))
+			{
+
+				getNextToken();
+				if(match(RPARENTSIS))
+				{
+
+				}
+				else
+				{
+					 errorReport(RPARENTSIS);
+				}
+			}
+			else
+			{
+				 errorReport(ID);
+			}
+		}
+		else
+		{
+			errorReport(LPARENTSIS);
+		}
 	}
 }
 

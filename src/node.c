@@ -73,7 +73,8 @@ void addTokenValue(node * temp, int value)
   temp->tokenNumber = value;
 }
 
-void addTokens()
+void addTokens(node * temp, char * string, int value)
 {
-  addTokenName(hand.currentNode, 
+  addTokenName(temp, string);
+  addTokenValue(temp, value);
 }
