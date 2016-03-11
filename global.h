@@ -14,6 +14,7 @@
 #define DEBUG 0
 
 #define BSIZE 256
+#define LRBFFR 2000
 #define NONE -1
 #define EOS '\0'
 #define NOT_FOUND 0

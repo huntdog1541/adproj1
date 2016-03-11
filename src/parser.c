@@ -443,7 +443,7 @@ void controlIf()
 						fprintf(fout, stElse);
 						fprintf(fout, "\tgoto L%d\nL%d:\n", (tempNumber + 1), tempNumber);
 						fprintf(fout, stIf);
-						fprintf(fout, "L%d:\n", (tempNumber + 1));
+						fprintf(fout, "\nL%d:\n", (tempNumber + 1));
 				}
 				else if(matchToken(END_IF))
 				{
