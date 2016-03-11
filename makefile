@@ -2,12 +2,12 @@ CC = gcc
 CFLAGS = -c -Wall
 
 TARGET = Parser
-MAIN = src/main
-PARSER = src/parser
-LEXER = src/lexer
-GLOBAL = src/global.h
-SYMBOL = src/symbol
-ERROR = src/error
+MAIN = main
+PARSER = parser
+LEXER = lexer
+GLOBAL = global.h
+SYMBOL = symbol
+ERROR = error
 
 $(TARGET): main.o parser.o lexer.o error.o symbol.o
 	$(CC) -o $(TARGET) main.o parser.o lexer.o error.o symbol.o
@@ -30,24 +30,24 @@ symbol.o: $(SYMBOL).c $(SYMBOL).h
 illegal: illegal1 illegal2 illegal3 illegal4
 
 legal:
-	./Parser testfiles/test1.txt
-	./Parser testfiles/test2.txt
-	./Parser testfiles/test3.txt
-	./Parser testfiles/test4.txt
+	./Parser test1.txt
+	./Parser test2.txt
+	./Parser test3.txt
+	./Parser test4.txt
 
 illegal1:
-	./Parser testfiles/illegaltest1.txt
+	./Parser illegaltest1.txt
 
 illegal2:
-	./Parser testfiles/illegaltest2.txt
+	./Parser illegaltest2.txt
 
 illegal3:
-	./Parser testfiles/illegaltest3.txt
+	./Parser illegaltest3.txt
 
 illegal4:
-	./Parser testfiles/illegaltest4.txt
+	./Parser illegaltest4.txt
 
 .PHONY : clean
 
 clean :
-			-rm -f *.o *.gch Parser* src/*.gch
+			-rm -f *.o *.gch Parser*
