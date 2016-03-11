@@ -22,7 +22,7 @@ int labelNumber;
  */
 int parser(char * fileName)
 {
-	char out[256];
+	char out[BSIZE];
 	strcpy(out, fileName);
 	strcat(out, ".op");
 	fout = fopen(out, "w");
@@ -120,7 +120,7 @@ void declareData()
  */
 void declaration()
 {
-	char temp[256];
+	char temp[BSIZE];
 	while(matchToken(ID))
 	{
 		strcpy(temp, tokenval.buffer);
@@ -226,7 +226,7 @@ void ifProgStatement(char * string)
  */
 void ifControlRead(char * string)
 {
-	char varb[256];
+	char varb[BSIZE];
 	if(matchToken(READ))
 	{
 		getNextToken();
@@ -272,7 +272,7 @@ void ifControlRead(char * string)
  */
 void controlRead()
 {
-	char varb[256];
+	char varb[BSIZE];
 	if(matchToken(READ))
 	{
 		getNextToken();
@@ -319,7 +319,7 @@ void controlRead()
  */
 void controlWrite()
 {
-	char varb[256];
+	char varb[BSIZE];
 	if(matchToken(WRITE))
 	{
 		getNextToken();
@@ -365,7 +365,7 @@ void controlWrite()
  */
 void ifControlWrite(char * string)
 {
-	char varb[256];
+	char varb[BSIZE];
 	if(matchToken(WRITE))
 	{
 		getNextToken();
@@ -411,9 +411,9 @@ void ifControlWrite(char * string)
  */
 void controlIf()
 {
-	char string[2000];
-	char stIf[2000];
-	char stElse[2000];
+	char string[LRBFFR];
+	char stIf[LRBFFR];
+	char stElse[LRBFFR];
 	int tempNumber = labelNumber;
 		if(matchToken(IF))
 		{
@@ -421,7 +421,7 @@ void controlIf()
 			{
 				while((!matchToken(ELSE)) && (!matchToken(END_IF)))
 				{
-					char temp[500];
+					char temp[LRBFFR];
 					ifProgStatement(temp);
 					strcat(stIf, temp);
 				}
@@ -431,7 +431,7 @@ void controlIf()
 						getNextToken(con);
 						while((!matchToken(END_IF)) && (con.isDone == 0))
 						{
-							char temp[500];
+							char temp[LRBFFR];
 							ifProgStatement(temp);
 							strcat(stElse, temp);
 						}
@@ -464,7 +464,7 @@ void controlIf()
  */
 void ifControlIf(char * str)
 {
-	char string[2000];
+	char string[LRBFFR];
 		if(matchToken(IF))
 		{
 			if(controlIfCondition(string))
@@ -505,7 +505,7 @@ void ifControlIf(char * str)
  */
 void controlWhile()
 {
-	char str[2000];
+	char str[LRBFFR];
 	int tempNumber = labelNumber;
 	labelNumber = labelNumber + 2;
 	if(matchToken(WHILE))
@@ -542,7 +542,7 @@ void controlWhile()
  */
 void ifControlWhile(char * string)
 {
-	char str[2000];
+	char str[LRBFFR];
 	if(matchToken(WHILE))
 	{
 		sprintf(string, "goto L%d\nL%d:\n", labelNumber, (labelNumber+1));
@@ -663,7 +663,7 @@ int controlCondition()
 int controlIfCondition(char * string)
 {
 	int answer = 0;
-	char var1[256], var2[256], op[256];
+	char var1[BSIZE], var2[BSIZE], op[BSIZE];
 	getNextToken();
 	if((matchToken(ID)) || (matchToken(NUMERICAL_CONSTANT)))
 	{
@@ -704,8 +704,8 @@ int controlIfCondition(char * string)
 int controlWhileCondition(char * string)
 {
 	int answer = 0;
-	char var1[256], var2[256], op[256];
-	char t1[1000], t2[1000];
+	char var1[BSIZE], var2[BSIZE], op[BSIZE];
+	char t1[LRBFFR], t2[LRBFFR];
 	getNextToken();
 	if((matchToken(ID)) || (matchToken(NUMERICAL_CONSTANT)))
 	{
@@ -746,7 +746,7 @@ int controlWhileCondition(char * string)
  */
 void controlID()
 {
-	 char store[256], var1[256], var2[256], op[256];
+	 char store[BSIZE], var1[BSIZE], var2[BSIZE], op[BSIZE];
 		if(matchToken(ID))
 		{
 			strcpy(store, tokenval.buffer);
@@ -776,7 +776,7 @@ void controlID()
 									fprintf(fout, "\tr1 := %s\n\tr2 := %s\n\tr1 := r1 %s r2\n", var1, var2, op);
 									while(matchOperator())
 									{
-										 char var3[256], op[256];
+										 char var3[BSIZE], op[BSIZE];
 										 strcpy(op, tokenval.buffer);
 										 getNextToken();
 										 if(matchToken(ID) || matchToken(NUMERICAL_CONSTANT))
@@ -810,7 +810,7 @@ void controlID()
  */
 void ifControlID(char * string)
 {
-	 char store[256], var1[256], var2[256], op[256];
+	 char store[BSIZE], var1[BSIZE], var2[BSIZE], op[BSIZE];
 		if(matchToken(ID))
 		{
 			strcpy(store, tokenval.buffer);
@@ -837,16 +837,16 @@ void ifControlID(char * string)
 								}
 								else if(matchOperator())
 								{
-									char t1[256], t2[256], t4[256];
+									char t1[BSIZE], t2[BSIZE], t4[BSIZE];
 									sprintf(t1, "\tr1 := %s\n\tr2 := %s\n\tr1 := r1 %s r2\n", var1, var2, op);
 									while(matchOperator())
 									{
-										 char var3[256], op[256];
+										 char var3[BSIZE], op[BSIZE];
 										 strcpy(op, tokenval.buffer);
 										 getNextToken();
 										 if(matchToken(ID) || matchToken(NUMERICAL_CONSTANT))
 										 {
-											 char t3[256];
+											 char t3[BSIZE];
 											 strcpy(var3, tokenval.buffer);
 											 sprintf(t3, "\tr2 := %s\n\tr1 := r1 %s r2\n", var3, op);
 											 strcat(t2, t3);
