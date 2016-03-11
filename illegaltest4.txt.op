@@ -1,0 +1,17 @@
+.data
+.word a
+.word b
+.text
+main:
+	a1 := &input
+	call readint
+	a := rv
+	a1 := &input
+	call readint
+	b := rv
+goto L1
+L2:
+	r1 := a
+	r2 := b
+	r1 := r1 > r2
+if := r1 goto L3

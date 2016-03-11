@@ -1,0 +1,22 @@
+.data
+.word a
+.word b
+.word c
+.text
+main:
+	r1 := a
+	r2 := b
+	r1 := r1 < r2
+if := r1 goto L1
+t	r1 := c
+	r2 := a
+	r1 := r1 - r2
+	b := r1
+	goto L2
+L1:
+`¥@	r1 := b
+	r2 := c
+	r1 := r1 + r2
+	a := r1
+L2:
+	goto exit
