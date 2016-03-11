@@ -11,6 +11,8 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
+#define DEBUG 1
+
 #define BSIZE 256
 #define NONE -1
 #define EOS '\0'
@@ -56,9 +58,10 @@
 #define LESSERTHAN 408
 #define GREATERTHANANDEQUAL 409
 #define LESSERTHANANDEQUAL 410
-#define STRINGEQUAL 411
-#define OPERATOR 412
-#define COMPARATOR 413
+#define NOTEQUAL 411
+#define STRINGEQUAL 412
+#define OPERATOR 413
+#define COMPARATOR 414
 
 //Data Types and IDs
 #define INT 500

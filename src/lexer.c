@@ -14,7 +14,6 @@
 
 FILE * fin;
 
-
 /* openLexFile - sets the global file pointer
  * return - no return value
  */
@@ -137,6 +136,12 @@ void getNextToken()
 		getNumber(con);
 	}
 	checkSpecialChar(temp);
+	if(DEBUG)
+	{
+		printf("Token is %s\n", tokenval.buffer);
+		fflush(stdout);
+	}
+
 }
 
 /* absorbSpace - runs a loop to absorb all spaces between words
@@ -172,6 +177,9 @@ void getNumber()
 	con.positionNumber++;
 	char buffer[BSIZE];
 	int i = 0;
+	for(i = 0; i < BSIZE; i++)
+		buffer[i] = '\0';
+	i = 0;
 	buffer[i++] = t;
 	while(isdigit(t))
 	{
@@ -268,6 +276,15 @@ void checkSpecialChar(char temp)
 			break;
 		case ')' :
 			setTokenValue(")", RPARENTSIS);
+			break;
+		case '!':
+			if(lookahead() == '=')
+			{
+				fgetc(fin);
+				con.positionNumber++;
+				setTokenValue("!=", NOTEQUAL);
+			}
+			break;
 		default: break;
 	}
 }

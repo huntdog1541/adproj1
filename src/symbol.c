@@ -72,6 +72,7 @@ int lastentry = 0;
       {"<", LESSERTHAN, "LESSERTHAN", },\
       {">=", GREATERTHANANDEQUAL, "GREATERTHANANDEQUAL", },\
       {"<=", LESSERTHANANDEQUAL, "LESSERTHANANDEQUAL", },\
+      {"!=", NOTEQUAL, "NOTEQUAL", },\
       {"<=>", STRINGEQUAL, "STRINGEQUAL", },\
       {"int", INT, "INT", },\
       {"float", FLOAT, "FLOAT", },\

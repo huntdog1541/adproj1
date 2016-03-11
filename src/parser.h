@@ -59,6 +59,10 @@ void declareData();
 void controlWrite();
 
 void controlRead();
+
+void ifControlWrite(char * string);
+
+void ifControlRead(char * string);
 /*
 *
 */
@@ -76,15 +80,28 @@ void beginProgramParse();
  */
 void progStatement();
 
+void ifProgStatement(char * string);
+
 /* controlIf - absorbs the if expression in the program
  * return - no return value
  */
 void controlIf();
 
+/* ifControlIf - absorbs the if expression in the program
+ * return - no return value
+ */
+void ifControlIf(char * string);
+
 /* controlWhile - absorbs the while expression in the program
  * return - no return
  */
 void controlWhile();
+
+/* controlWhile - absorbs the while expression in the program
+ * return - no return
+ */
+void ifControlWhile(char * string);
+
 
 /* controlExpression - absorbs an expression statement in the program
  * return - returns the value of the token not absorbed
@@ -100,6 +117,10 @@ int controlExpressionTail();
  * return - returns 0 if false, and 1 if true
  */
 int controlCondition();
+
+int controlIfCondition(char * string);
+
+int controlWhileCondition(char * string);
 
 /*  controlID - absorbs the expression that starts with an ID token
  * return - no return

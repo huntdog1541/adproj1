@@ -25,9 +25,9 @@ int main(int argc, char ** argv)
 	}
 	*/
 	init();
-	char cwd[1024];
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		fprintf(stdout, "Current working dir: %s\n", cwd);
+//	char cwd[1024];
+//	if (getcwd(cwd, sizeof(cwd)) != NULL)
+//		fprintf(stdout, "Current working dir: %s\n", cwd);
 	parser("test.txt");
 
 	return 0;
