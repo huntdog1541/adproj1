@@ -13,7 +13,7 @@
 #include "error.h"
 #include "symbol.h"
 
-FILE * fout;
+
 
 int labelNumber;
 
@@ -670,6 +670,10 @@ int controlIfCondition(char * string)
 	return answer;
 }
 
+/*
+ *
+ */
+
 int controlWhileCondition(char * string)
 {
 	int answer = 0;
@@ -850,7 +854,9 @@ int matchToken(int tokenValue)
 		answer = 1;
 	return answer;
 }
-
+/*
+ *
+ */
 void errorReport(int tokenValue)
 {
 	int a1 = lookupNumber(tokenValue), a2 = lookupNumber(tokenval.tokenNumber);

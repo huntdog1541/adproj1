@@ -20,6 +20,8 @@ struct tokenType
   int tokenNumber;
 };
 
+FILE * fin;
+
 struct tokenType tokenval;
 
 /* getID - gets the ID name from the file.

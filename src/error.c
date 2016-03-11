@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "error.h"
+#include "lexer.h"
 #include "parser.h"
 
 /* error - adds the message, line number, and line position
@@ -16,6 +17,8 @@
  void error(struct content * con)
  {
    fprintf(stderr, "Error at line %d position %d :%s \n\n", con->lineNumber, con->positionNumber, con->errorMessage);
+   fclose(fin);
+   fclose(fout);
    exit(1);
  }
 

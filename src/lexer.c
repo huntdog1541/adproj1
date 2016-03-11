@@ -12,7 +12,7 @@
 #include "lexer.h"
 #include "error.h"
 
-FILE * fin;
+
 
 /* openLexFile - sets the global file pointer
  * return - no return value

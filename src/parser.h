@@ -32,6 +32,8 @@ struct content {
 
 struct content con;
 
+FILE * fout;
+
 
 /* parser - parser takes the steps to initialize steps
  * return - return 0 if error, else returns 1

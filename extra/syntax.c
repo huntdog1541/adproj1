@@ -11,7 +11,6 @@
 #include "symbol.h"
 #include "lexer.h"
 #include "error.h"
-#include "node.h"
 #include "syntax.h"
 
 /* openLexFile - sets the global file pointer
