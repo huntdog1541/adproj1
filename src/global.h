@@ -11,7 +11,7 @@
 #ifndef GLOBAL_H_
 #define GLOBAL_H_
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define BSIZE 256
 #define NONE -1
