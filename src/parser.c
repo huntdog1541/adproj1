@@ -427,7 +427,7 @@ void controlIf()
 				}
 				if(matchToken(ELSE))
 				{
-						fprintf(fout, "if := r1 goto L%d\n", labelNumber);
+						fprintf(fout, "\tif := r1 goto L%d\n", labelNumber);
 						getNextToken(con);
 						while((!matchToken(END_IF)) && (con.isDone == 0))
 						{
@@ -510,7 +510,7 @@ void controlWhile()
 	labelNumber = labelNumber + 2;
 	if(matchToken(WHILE))
 	{
-		fprintf(fout, "goto L%d\nL%d:\n", tempNumber, (tempNumber+1));
+		fprintf(fout, "\tgoto L%d\nL%d:\n", tempNumber, (tempNumber+1));
 		sprintf(str, "L%d:\n\tr1 := ", tempNumber);
 		if(controlWhileCondition(str))
 		{
@@ -545,7 +545,7 @@ void ifControlWhile(char * string)
 	char str[LRBFFR];
 	if(matchToken(WHILE))
 	{
-		sprintf(string, "goto L%d\nL%d:\n", labelNumber, (labelNumber+1));
+		sprintf(string, "\tgoto L%d\nL%d:\n", labelNumber, (labelNumber+1));
 		sprintf(str, "L%d:\n\tr1 := ", labelNumber);
 		if(controlWhileCondition(str))
 		{
