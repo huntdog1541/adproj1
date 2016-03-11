@@ -127,6 +127,11 @@ int controlWhileCondition(char * string);
  */
 void controlID();
 
+/*  ifControlID - absorbs the expression that starts with an ID token
+ * return - no return
+ */
+void ifControlID(char * string);
+
 /* matchOperator - returns the value of operator or comparator according to the token's group
  * return - returns either OPERATOR, COMPARATOR, or SEMICOLON
  */

@@ -22,7 +22,10 @@ int labelNumber;
  */
 int parser(char * fileName)
 {
-	fout = fopen("output.txt", "w");
+	char out[256];
+	strcpy(out, fileName);
+	strcat(out, ".op");
+	fout = fopen(out, "w");
 	labelNumber = 1;
 	puts("Parser ran");
 	contentInit(&con);
@@ -385,26 +388,38 @@ void ifControlWrite(char * string)
 void controlIf()
 {
 	char string[2000];
+	char stIf[2000];
+	char stElse[2000];
+	int tempNumber = labelNumber;
 		if(matchToken(IF))
 		{
 			if(controlIfCondition(string))
 			{
 				while((!matchToken(ELSE)) && (!matchToken(END_IF)))
 				{
-					progStatement();
+					char temp[500];
+					ifProgStatement(temp);
+					strcat(stIf, temp);
 				}
 				if(matchToken(ELSE))
 				{
+						fprintf(fout, "if := r1 goto L%d\n", labelNumber);
 						getNextToken(con);
 						while((!matchToken(END_IF)) && (con.isDone == 0))
 						{
-							progStatement();
+							char temp[500];
+							ifProgStatement(temp);
+							strcat(stElse, temp);
 						}
 						if(!matchToken(END_IF))
 						{
 							strcpy(con.errorMessage, "Invalid End of While loop\n");
 							error(&con);
 						}
+						fprintf(fout, stElse);
+						fprintf(fout, "\tgoto L%d\nL%d:\n", (tempNumber + 1), tempNumber);
+						fprintf(fout, stIf);
+						fprintf(fout, "L%d:\n", (tempNumber + 1));
 				}
 				else if(matchToken(END_IF))
 				{
@@ -467,10 +482,12 @@ void ifControlIf(char * str)
 void controlWhile()
 {
 	char str[2000];
+	int tempNumber = labelNumber;
+	labelNumber = labelNumber + 2;
 	if(matchToken(WHILE))
 	{
-		fprintf(fout, "goto L%d\nL%d:\n", labelNumber, (labelNumber+1));
-		sprintf(str, "L%d:\n\tr1 := ", labelNumber);
+		fprintf(fout, "goto L%d\nL%d:\n", tempNumber, (tempNumber+1));
+		sprintf(str, "L%d:\n\tr1 := ", tempNumber);
 		if(controlWhileCondition(str))
 		{
 			if(matchToken(DO))
@@ -494,7 +511,6 @@ void controlWhile()
 
 		}
 	}
-	labelNumber = labelNumber + 2;
 }
 
 /* controlWhile - absorbs the while expression in the program

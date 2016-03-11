@@ -1,14 +1,14 @@
 program
-int a = 6, b;
-int c = 7;
+int a, b;
 begin
-if a < b;
-//Comment Two
-while a > b; do
-b = c + c;
-end_while
+read(a);
+read(b);
+while a != b; do
+if a > b;
+a = 17 - b;
 else
-b = c - a;
+b = b - a;
 end_if
-// Comment
+end_while
+write(a);
 end
