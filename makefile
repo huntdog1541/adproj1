@@ -50,4 +50,4 @@ illegal4:
 .PHONY : clean
 
 clean :
-			-rm -f *.o *.gch Parser*
+			-rm -f *.o *.gch
