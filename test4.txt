@@ -1,0 +1,14 @@
+program
+int a, b;
+begin
+read(a);
+read(b);
+while a != b; do
+if a > b;
+a = a - b;
+else
+b = b - a;
+end_if
+end_while
+write(a);
+end

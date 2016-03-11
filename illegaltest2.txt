@@ -1,0 +1,6 @@
+program
+int a = 6;
+begin
+// Comment
+d = 86 + a;
+end

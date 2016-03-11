@@ -1,0 +1,8 @@
+program
+int a = 6, b;
+int c = 7;
+begin
+// Comment
+if a < b; do
+a = b + c;
+end

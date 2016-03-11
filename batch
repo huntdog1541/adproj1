@@ -2,13 +2,13 @@
 #My First script
 
 make
-./Parser testfiles/test1.txt
-./Parser testfiles/test2.txt
-./Parser testfiles/test3.txt
-./Parser testfiles/test4.txt
+./Parser test1.txt
+./Parser test2.txt
+./Parser test3.txt
+./Parser test4.txt
 
-./Parser testfiles/illegaltest1.txt
-./Parser testfiles/illegaltest2.txt
-./Parser testfiles/illegaltest3.txt
-./Parser testfiles/illegaltest4.txt
+./Parser illegaltest1.txt
+./Parser illegaltest2.txt
+./Parser illegaltest3.txt
+./Parser illegaltest4.txt
 make clean
