@@ -1,10 +1,13 @@
 program
-int a = 6, b;
-int c = 7;
+int a, b;
 begin
-while a < b; do
-while b < c; do
- b = a + c;
+read(a);
+read(b);
+while a != b; do
+if a > b;
+a = a - b;
+else
+b = b - a;
 end_while
-// Comment
+write(a);
 end

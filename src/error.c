@@ -15,7 +15,7 @@
  */
  void error(struct content * con)
  {
-   fprintf(stderr, "Error at line %d position %d :%s \n", con->lineNumber, con->positionNumber, con->errorMessage);
+   fprintf(stderr, "Error at line %d position %d :%s \n\n", con->lineNumber, con->positionNumber, con->errorMessage);
    exit(1);
  }
 

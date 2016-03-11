@@ -1,0 +1,4 @@
+.data
+.word a
+.text
+main:

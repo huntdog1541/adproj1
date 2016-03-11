@@ -1,0 +1,10 @@
+.data
+.word a
+.word b
+.word c
+.text
+main:
+	r1 := a
+	r2 := b
+	r1 := r1 < r2
+	goto exit

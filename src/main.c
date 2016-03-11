@@ -13,7 +13,7 @@
 
 int main(int argc, char ** argv)
 {
-	/*if(argc == 2)
+	if(argc == 2)
 	{
 		printf("Running parser for file name %s\n", argv[1]);
 		init();
@@ -23,12 +23,11 @@ int main(int argc, char ** argv)
 	{
 		fprintf(stderr, "Enter file name at execution");
 	}
-	*/
-	init();
+//	init();
 //	char cwd[1024];
 //	if (getcwd(cwd, sizeof(cwd)) != NULL)
 //		fprintf(stdout, "Current working dir: %s\n", cwd);
-	parser("test.txt");
+//	parser("test.txt");
 
 	return 0;
 }

@@ -31,9 +31,9 @@ int parser(char * fileName)
 	contentInit(&con);
 	strcpy(con.fileName, fileName);
 	startParse();
-	printf("Successful Parse\n");
 	fprintf(fout, "\tgoto exit\n");
 	fclose(fout);
+	printf("Successful Parse\n\n\n");
 	return 0;
 }
 
@@ -263,7 +263,6 @@ void controlRead()
 			if(matchToken(ID))
 			{
 				strcpy(varb, tokenval.buffer);
-				printf("Value is %s\n", tokenval.buffer);
 				getNextToken();
 				if(matchToken(RPARENTSIS))
 				{
@@ -307,7 +306,6 @@ void controlWrite()
 			if(matchToken(ID))
 			{
 				strcpy(varb, tokenval.buffer);
-				printf("Value is %s\n", tokenval.buffer);
 				getNextToken();
 				if(matchToken(RPARENTSIS))
 				{
@@ -856,6 +854,6 @@ int matchToken(int tokenValue)
 void errorReport(int tokenValue)
 {
 	int a1 = lookupNumber(tokenValue), a2 = lookupNumber(tokenval.tokenNumber);
-	sprintf(con.errorMessage, "Error expect token type value of %d: %s but got %d: %s\n", tokenValue, (getLexeme(a1)), tokenval.tokenNumber, (getLexeme(a2)));
+	sprintf(con.errorMessage, "Error expect token type value of %d: %s but got %d: %s\n\n", tokenValue, (getLexeme(a1)), tokenval.tokenNumber, (getLexeme(a2)));
 	error(&con);
 }

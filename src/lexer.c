@@ -189,12 +189,6 @@ void getNumber()
 	}
 	ungetc(t, fin);
 	con.positionNumber--;
-	atoi(buffer);
-	/*int value = atoi(buffer);
-	if(value )
-	{
-		tokenval = NUMERICAL_CONSTANT;
-	}*/
 	setTokenValue(buffer, NUMERICAL_CONSTANT);
 }
 
